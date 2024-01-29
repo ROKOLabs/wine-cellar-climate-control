@@ -1,10 +1,3 @@
-import '@mantine/core/styles.css';
-import { ThemeProvider } from './providers/ThemeProvider';
-
-const App = () => (
-  <ThemeProvider>
-    <>Wine Cellar Climate Control</>
-  </ThemeProvider>
-);
+const App = () => <>Wine Cellar Climate Control</>;
 
 export default App;
