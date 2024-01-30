@@ -2,9 +2,9 @@ import { createContext } from 'react';
 import { authService } from 'features/auth/AuthService';
 import { useAuthStateChanged } from 'features/auth/hooks/useAuthStateChanged';
 
-export type AuthContextType = {};
+export type AuthServiceContextType = {};
 
-export const AuthContext = createContext(authService);
+export const AuthServiceContext = createContext(authService);
 
 type AuthProviderProps = {
   children: React.ReactNode;
@@ -12,8 +12,8 @@ type AuthProviderProps = {
 export const AuthProvider = (props: AuthProviderProps) => {
   useAuthStateChanged(authService.onAuthStateChanged);
   return (
-    <AuthContext.Provider value={authService}>
+    <AuthServiceContext.Provider value={authService}>
       {props.children}
-    </AuthContext.Provider>
+    </AuthServiceContext.Provider>
   );
 };

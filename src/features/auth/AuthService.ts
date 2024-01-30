@@ -1,4 +1,11 @@
-import type { Auth, User, NextOrObserver } from 'firebase/auth';
+import {
+  type Auth,
+  type User,
+  type NextOrObserver,
+  signInWithEmailAndPassword,
+  signOut,
+  createUserWithEmailAndPassword,
+} from 'firebase/auth';
 import { auth, onAuthStateChanged } from 'firebase/firebase';
 
 export type AuthService = AuthServiceClass;
@@ -10,11 +17,13 @@ class AuthServiceClass {
     this.auth = auth;
   }
 
-  register = async (email: string, password: string) => {};
+  register = (email: string, password: string) =>
+    createUserWithEmailAndPassword(this.auth, email, password);
 
-  login = async (email: string, password: string) => {};
+  login = (email: string, password: string) =>
+    signInWithEmailAndPassword(this.auth, email, password);
 
-  logout = async () => {};
+  logout = () => signOut(this.auth);
 
   onAuthStateChanged = (callback: NextOrObserver<User>) =>
     onAuthStateChanged(this.auth, callback);
