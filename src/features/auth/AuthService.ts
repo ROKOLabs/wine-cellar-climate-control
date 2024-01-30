@@ -1,9 +1,32 @@
-class AuthService {
-  register = async (email: string, password: string) => {};
+import {
+  type Auth,
+  type User,
+  type NextOrObserver,
+  signInWithEmailAndPassword,
+  signOut,
+  createUserWithEmailAndPassword,
+} from 'firebase/auth';
+import { auth, onAuthStateChanged } from 'firebase/firebase';
 
-  login = async (email: string, password: string) => {};
+export type AuthService = AuthServiceClass;
 
-  logout = async () => {};
+class AuthServiceClass {
+  private auth: Auth;
+
+  constructor() {
+    this.auth = auth;
+  }
+
+  register = (email: string, password: string) =>
+    createUserWithEmailAndPassword(this.auth, email, password);
+
+  login = (email: string, password: string) =>
+    signInWithEmailAndPassword(this.auth, email, password);
+
+  logout = () => signOut(this.auth);
+
+  onAuthStateChanged = (callback: NextOrObserver<User>) =>
+    onAuthStateChanged(this.auth, callback);
 }
 
-export const authService = new AuthService();
+export const authService = new AuthServiceClass();

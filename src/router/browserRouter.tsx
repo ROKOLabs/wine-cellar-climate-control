@@ -1,9 +1,16 @@
+import { TestButton } from 'components/LoginButton';
 import { createBrowserRouter } from 'react-router-dom';
 
 export const browserRouter = createBrowserRouter([
   {
     path: '/',
-    Component: () => <h1>Home</h1>,
+    Component: () => (
+      <div>
+        <h1>Home</h1>
+        <p>Welcome to the home page!</p>
+        <TestButton />
+      </div>
+    ),
   },
   {
     path: '/login',
