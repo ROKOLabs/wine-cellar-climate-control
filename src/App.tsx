@@ -1,11 +1,17 @@
 import '@mantine/core/styles.css';
-import { ThemeProvider } from 'providers/ThemeProvider';
+import { AuthProvider } from 'features/auth/AuthProvider';
 import { Router } from 'router/Router';
+import { StoreProvider } from 'store/StoreProvider';
+import { ThemeProvider } from 'theme/ThemeProvider';
 
 const App = () => (
-  <ThemeProvider>
-    <Router />
-  </ThemeProvider>
+  <StoreProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <Router />
+      </ThemeProvider>
+    </AuthProvider>
+  </StoreProvider>
 );
 
 export default App;
