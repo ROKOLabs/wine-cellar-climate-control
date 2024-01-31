@@ -4,7 +4,7 @@ import { Register } from 'features/auth/pages/Register';
 import { Home } from 'features/home/Home';
 import { createBrowserRouter } from 'react-router-dom';
 
-import AppLayout from 'features/AppLayout';
+import AppLayout from 'features/layout/AppLayout';
 
 export const browserRouter = createBrowserRouter([
   {
