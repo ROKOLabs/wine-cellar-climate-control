@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
 import pipe from 'lodash/fp/pipe';
-import { useAppDispatch } from 'store/hooks';
-import { setUser } from 'features/auth/authSlice';
-import { AuthService } from 'features/auth/AuthService';
 import tap from 'lodash/fp/tap';
+import { useEffect } from 'react';
+
+import { AuthService } from 'features/auth/AuthService';
+import { setUser } from 'features/auth/authSlice';
+import { useAppDispatch } from 'store/hooks';
 
 type OnAuthStateChanged = AuthService['onAuthStateChanged'];
 
@@ -17,5 +18,5 @@ export const useAuthStateChanged = (onAuthStateChanged: OnAuthStateChanged) => {
         dispatch,
       ),
     );
-  }, []);
+  }, [dispatch, onAuthStateChanged]);
 };

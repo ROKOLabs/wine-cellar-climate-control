@@ -6,6 +6,7 @@ import {
   signOut,
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
+
 import { auth, onAuthStateChanged } from 'firebase/firebase';
 
 export type AuthService = AuthServiceClass;

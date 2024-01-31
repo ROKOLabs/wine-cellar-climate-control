@@ -1,4 +1,4 @@
-import { browserRouter } from '../browserRouter';
+import { browserRouter } from 'router/browserRouter';
 
 type Args = Parameters<(typeof browserRouter)['navigate']>;
 

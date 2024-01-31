@@ -1,8 +1,7 @@
 import { createContext } from 'react';
+
 import { authService } from 'features/auth/AuthService';
 import { useAuthStateChanged } from 'features/auth/hooks/useAuthStateChanged';
-
-export type AuthServiceContextType = {};
 
 export const AuthServiceContext = createContext(authService);
 
