@@ -1,4 +1,5 @@
 import '@mantine/core/styles.css';
+import AppLayout from 'components/AppLayout';
 import { AuthProvider } from 'features/auth/AuthProvider';
 import { Router } from 'router/Router';
 import { StoreProvider } from 'store/StoreProvider';
@@ -8,7 +9,9 @@ const App = () => (
   <StoreProvider>
     <AuthProvider>
       <ThemeProvider>
-        <Router />
+        <AppLayout>
+          <Router />
+        </AppLayout>
       </ThemeProvider>
     </AuthProvider>
   </StoreProvider>
