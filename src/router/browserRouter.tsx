@@ -6,7 +6,7 @@ import AppLayout from 'features/AppLayout';
 export const browserRouter = createBrowserRouter([
   {
     path: '/',
-    Component: AppLayout as React.FC,
+    Component: AppLayout,
     children: [
       {
         index: true,
