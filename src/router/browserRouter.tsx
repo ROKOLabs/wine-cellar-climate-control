@@ -4,28 +4,33 @@ import { Register } from 'features/auth/pages/Register';
 import { Home } from 'features/home/Home';
 import { createBrowserRouter } from 'react-router-dom';
 
-import { TestButton } from 'components/LoginButton';
 import AppLayout from 'features/AppLayout';
 
 export const browserRouter = createBrowserRouter([
   {
     path: '/',
-    loader: () => null,
-    Component: Home,
-  },
-  {
-    path: '/settings',
-    loader: () => null,
-    Component: Settings,
-  },
-  {
-    path: '/login',
-    loader: () => null,
-    Component: Login,
-  },
-  {
-    path: '/register',
-    loader: () => null,
-    Component: Register,
+    Component: AppLayout,
+    children: [
+      {
+        index: true,
+        loader: () => null,
+        Component: Home,
+      },
+      {
+        path: '/settings',
+        loader: () => null,
+        Component: Settings,
+      },
+      {
+        path: '/login',
+        loader: () => null,
+        Component: Login,
+      },
+      {
+        path: '/register',
+        loader: () => null,
+        Component: Register,
+      },
+    ],
   },
 ]);
