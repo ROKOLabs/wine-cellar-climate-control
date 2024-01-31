@@ -3,7 +3,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { ReactNode } from 'react';
 
 interface AppLayoutProps {
-  children: ReactNode; // Allow for children components
+  children: ReactNode;
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
