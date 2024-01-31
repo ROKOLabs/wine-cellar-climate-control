@@ -1,12 +1,8 @@
 import { AppShell, Burger, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { ReactNode } from 'react';
+import { Outlet } from 'react-router-dom';
 
-interface AppLayoutProps {
-  children: ReactNode;
-}
-
-export default function AppLayout({ children }: AppLayoutProps) {
+export default function AppLayout() {
   const [opened, { toggle }] = useDisclosure();
 
   return (
@@ -22,7 +18,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
         </Group>
       </AppShell.Header>
       <AppShell.Navbar p="md">Sidebar</AppShell.Navbar>
-      <AppShell.Main>{children}</AppShell.Main>
+      <AppShell.Main>
+        <Outlet />
+      </AppShell.Main>
     </AppShell>
   );
 }
