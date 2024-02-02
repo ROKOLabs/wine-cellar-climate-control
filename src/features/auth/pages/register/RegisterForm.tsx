@@ -1,6 +1,21 @@
 import { Paper, TextInput, PasswordInput, Button } from '@mantine/core';
+import { useForm, Controller } from 'react-hook-form';
+
+interface IRegisterForm {
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
 
 export const RegisterForm = () => {
+  const { control } = useForm<IRegisterForm>({
+    defaultValues: {
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+  });
+
   return (
     <form
       style={{
@@ -10,11 +25,34 @@ export const RegisterForm = () => {
       }}
     >
       <Paper withBorder shadow="md" p="xl" radius="md">
-        <TextInput type="email" label="Email" required />
+        <Controller
+          name="email"
+          control={control}
+          render={({ field }) => (
+            <TextInput {...field} label="Email" mt="lg" withAsterisk />
+          )}
+        />
 
-        <PasswordInput label="Password" mt="lg" required />
+        <Controller
+          name="password"
+          control={control}
+          render={({ field }) => (
+            <PasswordInput {...field} label="Password" mt="lg" withAsterisk />
+          )}
+        />
 
-        <PasswordInput label="Confirm Password" mt="lg" required />
+        <Controller
+          name="confirmPassword"
+          control={control}
+          render={({ field }) => (
+            <PasswordInput
+              {...field}
+              label="Confirm Password"
+              mt="lg"
+              withAsterisk
+            />
+          )}
+        />
 
         <Button type="submit" fullWidth mt="xl">
           Register

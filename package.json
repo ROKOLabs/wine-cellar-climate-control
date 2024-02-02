@@ -25,6 +25,7 @@
     "@mobily/ts-belt": "^3.13.1",
     "@reduxjs/toolkit": "^2.1.0",
     "@tabler/icons-react": "^2.47.0",
+    "react-hook-form": "^7.50.0",
     "firebase": "^10.7.2",
     "lodash": "^4.17.21",
     "ramda": "^0.29.1",
