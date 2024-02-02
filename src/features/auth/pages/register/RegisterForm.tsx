@@ -1,5 +1,14 @@
 import { Paper, TextInput, PasswordInput, Button } from '@mantine/core';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+
+import { useRegisterMutation } from 'features/auth/authApi';
+import { navigate } from 'router/utility/navigate';
+
+interface Props {
+  createSuccessNotification: () => void;
+  createErrorNotification: () => void;
+  resetNotification: () => void;
+}
 
 interface IRegisterForm {
   email: string;
@@ -7,8 +16,14 @@ interface IRegisterForm {
   confirmPassword: string;
 }
 
-export const RegisterForm = () => {
-  const { control } = useForm<IRegisterForm>({
+export const RegisterForm = ({
+  createSuccessNotification,
+  createErrorNotification,
+  resetNotification,
+}: Props) => {
+  const [register] = useRegisterMutation();
+
+  const { control, handleSubmit } = useForm<IRegisterForm>({
     defaultValues: {
       email: '',
       password: '',
@@ -16,8 +31,26 @@ export const RegisterForm = () => {
     },
   });
 
+  const onSubmit: SubmitHandler<IRegisterForm> = async ({
+    email,
+    password,
+  }) => {
+    try {
+      resetNotification();
+      await register({ email, password });
+      createSuccessNotification();
+      setTimeout(() => {
+        navigate('/login');
+      }, 5000);
+    } catch (error) {
+      console.error('authService.register error...', error);
+      createErrorNotification();
+    }
+  };
+
   return (
     <form
+      onSubmit={handleSubmit(onSubmit)}
       style={{
         width: '520px',
         maxWidth: '100%',
