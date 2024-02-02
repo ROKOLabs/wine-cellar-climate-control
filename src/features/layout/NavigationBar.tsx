@@ -12,21 +12,28 @@ import {
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 
+import { useSidebar } from './hooks/useSidebar';
+
 export default function NavigationBar() {
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme('dark');
   const navigate = useNavigate();
 
+  const { toggleSidebar } = useSidebar();
+
   const toggleColorScheme = () => {
     setColorScheme(computedColorScheme === 'dark' ? 'light' : 'dark');
+    toggleSidebar();
   };
 
   const navigateToSettings = () => {
     navigate('/settings');
+    toggleSidebar();
   };
 
   const navigateToHome = () => {
     navigate('/');
+    toggleSidebar();
   };
 
   return (

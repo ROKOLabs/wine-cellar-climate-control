@@ -1,10 +1,11 @@
 import { AppShell, Burger, Group } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
 import { Outlet } from 'react-router-dom';
+
 import NavigationBar from './NavigationBar';
+import { useSidebar } from './hooks/useSidebar';
 
 export default function AppLayout() {
-  const [opened, { toggle }] = useDisclosure();
+  const { isOpen, toggleSidebar } = useSidebar();
 
   return (
     <AppShell
@@ -12,13 +13,18 @@ export default function AppLayout() {
       navbar={{
         width: 60,
         breakpoint: 'sm',
-        collapsed: { mobile: !opened },
+        collapsed: { mobile: !isOpen },
       }}
       padding="md"
     >
       <AppShell.Header>
         <Group h="100%" px="md">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+          <Burger
+            opened={isOpen}
+            onClick={toggleSidebar}
+            hiddenFrom="sm"
+            size="sm"
+          />
           Wine Cellar Climate Control
         </Group>
       </AppShell.Header>
