@@ -1,4 +1,4 @@
-import { ActionIcon, Burger, Tooltip } from '@mantine/core';
+import { ActionIcon, Burger, Flex, Group, Title, Tooltip } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconSearch, IconUser } from '@tabler/icons-react';
 
@@ -6,20 +6,14 @@ export default function Header() {
   const [opened, { toggle }] = useDisclosure();
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '0 16px',
-        height: '100%',
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+    <Flex justify="space-between" p={{ base: '3px', sm: 'md' }} h="100%">
+      <Group w={{ base: '65%' }}>
         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-        Wine Cellar Climate Control
-      </div>
-      <div style={{ display: 'flex', gap: '8px' }}>
+        <Title order={4} w={{ base: '70%', sm: '100%' }}>
+          Wine Cellar Climate Control
+        </Title>
+      </Group>
+      <Group gap="xs" w={{ base: '70px' }}>
         <Tooltip label="Search">
           <ActionIcon variant="light">
             <IconSearch />
@@ -30,7 +24,7 @@ export default function Header() {
             <IconUser />
           </ActionIcon>
         </Tooltip>
-      </div>
-    </div>
+      </Group>
+    </Flex>
   );
 }
