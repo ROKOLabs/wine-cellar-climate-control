@@ -1,7 +1,9 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Paper, TextInput, PasswordInput, Button } from '@mantine/core';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 
 import { useRegisterMutation } from 'features/auth/authApi';
+import { RegisterSchema } from 'features/auth/pages/config';
 import { navigate } from 'router/utility/navigate';
 
 interface Props {
@@ -23,12 +25,17 @@ export const RegisterForm = ({
 }: Props) => {
   const [register] = useRegisterMutation();
 
-  const { control, handleSubmit } = useForm<IRegisterForm>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IRegisterForm>({
     defaultValues: {
       email: '',
       password: '',
       confirmPassword: '',
     },
+    resolver: zodResolver(RegisterSchema),
   });
 
   const onSubmit: SubmitHandler<IRegisterForm> = async ({
@@ -62,7 +69,13 @@ export const RegisterForm = ({
           name="email"
           control={control}
           render={({ field }) => (
-            <TextInput {...field} label="Email" mt="lg" withAsterisk />
+            <TextInput
+              {...field}
+              label="Email"
+              mt="lg"
+              withAsterisk
+              error={errors.email?.message}
+            />
           )}
         />
 
@@ -70,7 +83,13 @@ export const RegisterForm = ({
           name="password"
           control={control}
           render={({ field }) => (
-            <PasswordInput {...field} label="Password" mt="lg" withAsterisk />
+            <PasswordInput
+              {...field}
+              label="Password"
+              mt="lg"
+              withAsterisk
+              error={errors.password?.message}
+            />
           )}
         />
 
@@ -83,6 +102,7 @@ export const RegisterForm = ({
               label="Confirm Password"
               mt="lg"
               withAsterisk
+              error={errors.confirmPassword?.message}
             />
           )}
         />
