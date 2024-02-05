@@ -1,4 +1,5 @@
 import { Button, Group } from '@mantine/core';
+import { useNavigate } from 'react-router';
 
 import { useAuthService } from 'features/auth/hooks/useAuthService';
 import { tapX } from 'utility/fp/tapX';
@@ -18,24 +19,25 @@ const LOGIN_DATA = {
 
 export const TestButton = () => {
   const authService = useAuthService();
+  const navigate = useNavigate();
+
+  const goToHome = () => navigate('/home');
+  const goToLogin = () => navigate('/login');
 
   const handleRegister = () =>
     authService
       .register(REGISTRATION_DATA)
-      .then(tapX('registration success'))
+      .then(goToHome)
       .catch(tapX('registration error'));
 
   const handleLogin = () =>
     authService
       .login(LOGIN_DATA.email, LOGIN_DATA.password)
-      .then(tapX('login success'))
+      .then(goToHome)
       .catch(tapX('login error'));
 
   const handleLogout = () =>
-    authService
-      .logout()
-      .then(tapX('logout success'))
-      .catch(tapX('logout error'));
+    authService.logout().then(goToLogin).catch(tapX('logout error'));
 
   return (
     <Group>
