@@ -2,7 +2,7 @@ import { AppShell, Burger, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Outlet } from 'react-router-dom';
 
-export default function AppLayout() {
+export const AppLayout = () => {
   const [opened, { toggle }] = useDisclosure();
 
   return (
@@ -23,4 +23,4 @@ export default function AppLayout() {
       </AppShell.Main>
     </AppShell>
   );
-}
+};

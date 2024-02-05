@@ -9,7 +9,7 @@ module.exports = {
     'plugin:import/recommended',
     'prettier',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  ignorePatterns: ['/*', '!/src'],
   parser: '@typescript-eslint/parser',
   plugins: ['react-refresh', 'no-relative-import-paths', 'import'],
   rules: {
@@ -17,6 +17,13 @@ module.exports = {
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
+    ],
+    'react/function-component-definition': [
+      'error',
+      {
+        namedComponents: 'arrow-function',
+        unnamedComponents: 'arrow-function',
+      },
     ],
     '@typescript-eslint/no-unused-vars': [
       'warn',
@@ -36,6 +43,7 @@ module.exports = {
         },
       },
     ],
+    'import/no-default-export': 'error',
     'no-relative-import-paths/no-relative-import-paths': [
       'warn',
       { rootDir: 'src', allowSameFolder: true },
