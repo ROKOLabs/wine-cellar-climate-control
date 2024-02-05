@@ -1,0 +1,13 @@
+.logo {
+  color: var(--mantine-color-red-6);
+  @mixin smaller-than $mantine-breakpoint-sm {
+    display: none;
+  }
+}
+
+.title {
+  flex: 1;
+  @mixin smaller-than $mantine-breakpoint-sm {
+    text-align: center;
+  }
+}
