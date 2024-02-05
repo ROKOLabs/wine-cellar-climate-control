@@ -1,6 +1,8 @@
-import { AppShell, Burger, Group } from '@mantine/core';
+import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Outlet } from 'react-router-dom';
+
+import { Header } from 'features/layout/components/Header/Header';
 
 export const AppLayout = () => {
   const [opened, { toggle }] = useDisclosure();
@@ -12,10 +14,7 @@ export const AppLayout = () => {
       padding="md"
     >
       <AppShell.Header>
-        <Group h="100%" px="md">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          Wine Cellar Climate Control
-        </Group>
+        <Header opened={opened} toggle={toggle} />
       </AppShell.Header>
       <AppShell.Navbar p="md">Sidebar</AppShell.Navbar>
       <AppShell.Main>
