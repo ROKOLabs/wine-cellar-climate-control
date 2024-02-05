@@ -5,11 +5,16 @@ import { Login } from 'features/auth/pages/Login';
 import { Register } from 'features/auth/pages/Register';
 import { Home } from 'features/home/Home';
 import AppLayout from 'features/layout/AppLayout';
+import { SidebarProvider } from 'features/layout/SidebarContext';
 
 export const browserRouter = createBrowserRouter([
   {
     path: '/',
-    Component: AppLayout,
+    Component: () => (
+      <SidebarProvider>
+        <AppLayout />
+      </SidebarProvider>
+    ),
     children: [
       {
         index: true,
