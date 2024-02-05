@@ -12,8 +12,10 @@
     "preview": "vite preview"
   },
   "lint-staged": {
+    "*.{ts,tsx}": [
+      "yarn run lint"
+    ],
     "*": [
-      "yarn run lint",
       "yarn run prettier"
     ]
   },
