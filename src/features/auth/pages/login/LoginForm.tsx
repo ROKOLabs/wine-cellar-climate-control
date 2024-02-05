@@ -1,60 +1,64 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Paper, TextInput, PasswordInput, Button } from '@mantine/core';
+import { FirebaseError } from 'firebase/app';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 
-import { useRegisterMutation } from 'features/auth/authApi';
-import { RegisterSchema } from 'features/auth/pages/config';
+import { useLoginMutation } from 'features/auth/authApi';
+import { LoginSchema } from 'features/auth/pages/config';
 import { navigate } from 'router/utility/navigate';
 
 interface Props {
-  createSuccessNotification: () => void;
   createErrorNotification: (arg: string) => void;
   resetNotification: () => void;
 }
 
-interface IRegisterForm {
+interface ILoginForm {
   email: string;
   password: string;
-  confirmPassword: string;
 }
 
-export const RegisterForm = ({
-  createSuccessNotification,
+export const LoginForm = ({
   createErrorNotification,
   resetNotification,
 }: Props) => {
-  const [register] = useRegisterMutation();
+  const [login] = useLoginMutation();
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<IRegisterForm>({
+  } = useForm<ILoginForm>({
     defaultValues: {
       email: '',
       password: '',
-      confirmPassword: '',
     },
-    resolver: zodResolver(RegisterSchema),
+    resolver: zodResolver(LoginSchema),
   });
 
-  const onSubmit: SubmitHandler<IRegisterForm> = async ({
-    email,
-    password,
-  }) => {
+  const onSubmit: SubmitHandler<ILoginForm> = async ({ email, password }) => {
     try {
       resetNotification();
-      await register({ email, password });
-      createSuccessNotification();
-      setTimeout(() => {
-        navigate('/login');
-      }, 5000);
+      await login({ email, password });
+      navigate('/');
     } catch (error) {
-      console.error('authService.register error...', error);
-      createErrorNotification(
-        'It seems something went wrong on our end. Please try again later',
-      );
+      handleErrors(error);
     }
+  };
+
+  const handleErrors = (error: unknown) => {
+    console.error('authService.login error...', error);
+    let err =
+      'It seems something went wrong on our end. Please try again later';
+    if (error instanceof FirebaseError) {
+      if (
+        error.code === 'auth/user-not-found' ||
+        error.code === 'auth/wrong-password'
+      ) {
+        err =
+          "User not found. Please check your credentials or sign up if you're new";
+      }
+    }
+    createErrorNotification(err);
   };
 
   return (
@@ -74,7 +78,6 @@ export const RegisterForm = ({
             <TextInput
               {...field}
               label="Email"
-              mt="lg"
               withAsterisk
               error={errors.email?.message}
             />
@@ -95,22 +98,8 @@ export const RegisterForm = ({
           )}
         />
 
-        <Controller
-          name="confirmPassword"
-          control={control}
-          render={({ field }) => (
-            <PasswordInput
-              {...field}
-              label="Confirm Password"
-              mt="lg"
-              withAsterisk
-              error={errors.confirmPassword?.message}
-            />
-          )}
-        />
-
         <Button type="submit" fullWidth mt="xl">
-          Register
+          Login
         </Button>
       </Paper>
     </form>

@@ -14,11 +14,11 @@ export const useNotification = () => {
     });
   };
 
-  const createErrorNotification = () => {
+  const createErrorNotification = (msg: string) => {
     setNotification({
       type: 'error',
       title: 'Oops!',
-      msg: 'It seems something went wrong on our end. Please try again later',
+      msg: msg,
       color: 'red',
     });
   };
