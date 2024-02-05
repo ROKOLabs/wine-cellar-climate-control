@@ -1,24 +1,41 @@
 import { Button, Group } from '@mantine/core';
 
 import { useAuthService } from 'features/auth/hooks/useAuthService';
+import { tapX } from 'utility/fp/tapX';
+
+const REGISTRATION_DATA = {
+  username: 'ivbrajkovic1',
+  email: 'ivan.brajkovic1@icloud.com',
+  password: '123456',
+  name: 'Ivan',
+  lastname: 'Brajkovic',
+};
+
+const LOGIN_DATA = {
+  email: 'ivan.brajkovic1@icloud.com',
+  password: '123456',
+};
 
 export const TestButton = () => {
   const authService = useAuthService();
 
   const handleRegister = () =>
     authService
-      .register('test@gmail.com', 'password1234')
-      .then(console.log)
-      .catch(console.error);
+      .register(REGISTRATION_DATA)
+      .then(tapX('registration success'))
+      .catch(tapX('registration error'));
 
   const handleLogin = () =>
     authService
-      .login('test@gmail.com', 'password1234')
-      .then(console.log)
-      .catch(console.error);
+      .login(LOGIN_DATA.email, LOGIN_DATA.password)
+      .then(tapX('login success'))
+      .catch(tapX('login error'));
 
   const handleLogout = () =>
-    authService.logout().then(console.log).catch(console.error);
+    authService
+      .logout()
+      .then(tapX('logout success'))
+      .catch(tapX('logout error'));
 
   return (
     <Group>
