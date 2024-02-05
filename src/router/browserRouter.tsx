@@ -4,7 +4,7 @@ import { Settings } from 'features/Settings/Settings';
 import { Login } from 'features/auth/pages/Login';
 import { Register } from 'features/auth/pages/Register';
 import { Home } from 'features/home/Home';
-import AppLayout from 'features/layout/AppLayout';
+import { AppLayout } from 'features/layout/AppLayout';
 
 export const browserRouter = createBrowserRouter([
   {
