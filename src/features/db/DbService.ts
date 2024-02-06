@@ -1,3 +1,4 @@
+import type { DocumentData } from 'firebase/firestore';
 import {
   getFirestore,
   collection,
