@@ -19,6 +19,10 @@ export class AuthService {
     return this.#auth.currentUser;
   }
 
+  get isUserLoggedIn() {
+    return Boolean(this.#auth.currentUser);
+  }
+
   private constructor(appInstance: typeof app) {
     this.#auth = getAuth(appInstance);
   }

@@ -1,11 +1,8 @@
 import { redirect } from 'react-router';
 
-import { store } from 'store/store';
+import { AuthService } from 'features/auth/service/AuthService';
 
 export const protectedLoader = () => {
-  console.log('protectedLoader', Boolean(store.getState().auth.user));
-
-  if (Boolean(store.getState().auth.user)) return null;
-
+  if (AuthService.getInstance().isUserLoggedIn) return null;
   return redirect('/login');
 };
