@@ -1,10 +1,8 @@
 import { User } from 'features/auth/authSlice';
-import { AuthService } from 'features/auth/service/AuthService';
+import { AuthService, LoginParams } from 'features/auth/service/AuthService';
 import { DbService } from 'features/db/DbService';
 
 type WithPassword<T> = T & { password: string };
-type LoginParams = Parameters<AuthService['login']>;
-type LogoutParams = Parameters<AuthService['logout']>;
 type OnAuthStateChangedParams = Parameters<AuthService['onAuthStateChanged']>;
 type UpdateUserProfileParams = Parameters<AuthService['updateUserProfile']>;
 
@@ -32,7 +30,7 @@ export class EnhancedAuthService {
 
   register = async (props: WithPassword<User>) => {
     const { email, password, name, lastname, username } = props;
-    const { user } = await this.#authService.register(email, password);
+    const { user } = await this.#authService.register({ email, password });
 
     const details = { email, name, lastname, username };
     await this.#dbService.setUserDetails(user.uid, details);
@@ -43,12 +41,12 @@ export class EnhancedAuthService {
 
   // Exported from AuthService
 
-  login = (...args: LoginParams) => {
-    return this.#authService.login(...args);
+  login = (arg: LoginParams) => {
+    return this.#authService.login(arg);
   };
 
-  logout = (...args: LogoutParams) => {
-    return this.#authService.logout(...args);
+  logout = () => {
+    return this.#authService.logout();
   };
 
   onAuthStateChanged = (...args: OnAuthStateChangedParams) => {

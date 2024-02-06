@@ -1,3 +1,4 @@
+import type { DocumentData } from 'firebase/firestore';
 import {
   getFirestore,
   collection,
@@ -22,7 +23,8 @@ type FirestorePath = `${RootCollection}` | `${RootCollection}/${string}`;
 // Utility functions
 const isSnapshotEmpty = (snapshot: QuerySnapshot) => snapshot.empty;
 const isSnapshotNotEmpty = complement(isSnapshotEmpty);
-const getSnapshotData = (snapshot: DocumentSnapshot) => snapshot.data();
+const getSnapshotData = <T = DocumentData>(snapshot: DocumentSnapshot) =>
+  snapshot.data() as T | undefined;
 
 // Firestore reference getters
 const getDocRef = (db: Firestore) => (path: FirestorePath) => doc(db, path);
@@ -61,11 +63,13 @@ export class DbService {
   /**
    * Retrieves user details by UID.
    * @param {string} uid - The user ID to retrieve details for.
-   * @returns {Promise<any>} - User details object.
+   * @returns {Promise<User | undefined>} - User details object.
    */
   public getUserDetails = (uid: string) => {
     const userDocRef = this.#getDocRef(`users/${uid}`);
-    return getDoc(userDocRef).then(getSnapshotData);
+
+    // TODO: Verify user details retrieved
+    return getDoc(userDocRef).then(getSnapshotData<User>);
   };
 
   public setUserDetails = (uid: string, details: Partial<User>) => {

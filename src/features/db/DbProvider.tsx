@@ -1,11 +1,18 @@
-import { createContext } from 'react';
+import { ReactNode, createContext, useState } from 'react';
 
-import { DbService } from './DbService';
+import { DbService } from 'features/db/DbService';
 
 export const DbProviderContext = createContext<DbService | null>(null);
 
-export const DbProvider = ({ children }: { children: React.ReactNode }) => (
-  <DbProviderContext.Provider value={DbService.getInstance()}>
-    {children}
-  </DbProviderContext.Provider>
-);
+type DbProviderProps = {
+  children: ReactNode;
+};
+
+export const DbProvider = ({ children }: DbProviderProps) => {
+  const [dbService] = useState(() => DbService.getInstance());
+  return (
+    <DbProviderContext.Provider value={dbService}>
+      {children}
+    </DbProviderContext.Provider>
+  );
+};

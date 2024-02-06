@@ -1,6 +1,5 @@
 import { createContext, useState } from 'react';
 
-import { useAuthStateChanged } from 'features/auth/hooks/useAuthStateChanged';
 import { AuthService } from 'features/auth/service/AuthService';
 import { EnhancedAuthService } from 'features/auth/service/EnhancedAuthService';
 import { DbService } from 'features/db/DbService';
@@ -19,7 +18,6 @@ export const AuthProvider = (props: AuthProviderProps) => {
       DbService.getInstance(),
     ),
   );
-  useAuthStateChanged(authService.onAuthStateChanged);
   return (
     <AuthServiceContext.Provider value={authService}>
       {props.children}

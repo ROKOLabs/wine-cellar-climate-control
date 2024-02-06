@@ -11,12 +11,20 @@ import type { User, NextOrObserver } from 'firebase/auth';
 import { assertUserLoggedIn } from 'features/auth/assertions/assertUserLoggedIn';
 import { app } from 'firebase/firebase';
 
+export type RegisterParams = { email: string; password: string };
+export type LoginParams = { email: string; password: string };
+export type LogOutParams = void;
+
 export class AuthService {
   static #instance: AuthService;
   #auth;
 
   get user() {
     return this.#auth.currentUser;
+  }
+
+  get isUserLoggedIn() {
+    return Boolean(this.#auth.currentUser);
   }
 
   private constructor(appInstance: typeof app) {
@@ -29,10 +37,10 @@ export class AuthService {
     return AuthService.#instance;
   }
 
-  register = (email: string, password: string) =>
+  register = ({ email, password }: RegisterParams) =>
     createUserWithEmailAndPassword(this.#auth, email, password);
 
-  login = (email: string, password: string) =>
+  login = ({ email, password }: LoginParams) =>
     signInWithEmailAndPassword(this.#auth, email, password);
 
   logout = () => signOut(this.#auth);
