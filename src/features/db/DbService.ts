@@ -14,11 +14,17 @@ import {
 } from 'firebase/firestore';
 import { complement, not } from 'ramda';
 
-import { User } from 'features/auth/authSlice';
 import { app } from 'firebase/firebase';
 
 type RootCollection = 'users' | 'settings' | 'sensors';
 type FirestorePath = `${RootCollection}` | `${RootCollection}/${string}`;
+
+type User = {
+  email: string;
+  lastname: string;
+  name: string;
+  username: string;
+};
 
 // Utility functions
 const isSnapshotEmpty = (snapshot: QuerySnapshot) => snapshot.empty;
@@ -72,6 +78,12 @@ export class DbService {
     return getDoc(userDocRef).then(getSnapshotData<User>);
   };
 
+  /**
+   * Sets user details by UID.
+   * @param uid - The user ID to set details for.
+   * @param details - The details to set.
+   * @returns - A promise that resolves when the details are set.
+   */
   public setUserDetails = (uid: string, details: Partial<User>) => {
     const userDocRef = this.#getDocRef(`users/${uid}`);
     return setDoc(userDocRef, details);
