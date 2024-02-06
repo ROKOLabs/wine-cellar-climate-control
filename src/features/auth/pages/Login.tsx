@@ -2,7 +2,7 @@ import { Button } from '@mantine/core';
 import { useEffect } from 'react';
 
 import { TestButton } from 'components/LoginButton';
-import { useLazyLoginQuery } from 'features/auth/authApi';
+import { useLoginMutation } from 'features/auth/authApi';
 
 const LOGIN_DATA = {
   email: 'ivan.brajkovic1@icloud.com',
@@ -12,13 +12,18 @@ const LOGIN_DATA = {
 export const Login = () => {
   const [
     login,
-    { isLoading, isFetching, isError, isSuccess, isUninitialized, data },
-  ] = useLazyLoginQuery();
+    {
+      isLoading, //
+      isError,
+      isSuccess,
+      isUninitialized,
+      data,
+    },
+  ] = useLoginMutation();
 
   useEffect(() => {
     console.log({
       isLoading,
-      isFetching,
       isError,
       isSuccess,
       isUninitialized,
