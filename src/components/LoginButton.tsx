@@ -32,7 +32,10 @@ export const TestButton = () => {
 
   const handleLogin = () =>
     authService
-      .login(LOGIN_DATA.email, LOGIN_DATA.password)
+      .login({
+        email: LOGIN_DATA.email,
+        password: LOGIN_DATA.password,
+      })
       .then(goToHome)
       .catch(tapX('login error'));
 
