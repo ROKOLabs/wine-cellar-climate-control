@@ -10,9 +10,6 @@ import { authorizationLoader } from 'router/loaders/authorizationLoader';
 import { protectedLoader } from 'router/loaders/protectedLoader';
 
 export const browserRouter = createBrowserRouter([
-  // Public routes
-  { path: '/login', loader: authorizationLoader, Component: Login },
-  { path: '/register', loader: authorizationLoader, Component: Register },
   {
     Component: AuthStateChangeGuard,
     children: [
@@ -28,6 +25,14 @@ export const browserRouter = createBrowserRouter([
               { path: '/settings', Component: Settings },
             ],
           },
+        ],
+      },
+      {
+        loader: authorizationLoader,
+        children: [
+          // Public routes
+          { path: '/login', Component: Login },
+          { path: '/register', Component: Register },
         ],
       },
     ],
