@@ -12,7 +12,7 @@ import {
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 
-import { useSidebar } from './hooks/useSidebar';
+import { useSidebar } from 'features/layout/hooks/useSidebar';
 
 export const NavigationBar = () => {
   const { setColorScheme } = useMantineColorScheme();
@@ -27,12 +27,14 @@ export const NavigationBar = () => {
   };
 
   const navigateToSettings = () => {
+    console.log('Navigating to settings');
     navigate('/settings');
     toggleSidebar();
   };
 
   const navigateToHome = () => {
-    navigate('/');
+    console.log('Navigating to home');
+    navigate('/home');
     toggleSidebar();
   };
 

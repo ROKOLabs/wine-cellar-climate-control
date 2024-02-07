@@ -58,5 +58,9 @@
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
     "vite-tsconfig-paths": "^4.3.1"
-  }
+  },
+  "main": "index.js",
+  "repository": "https://github.com/ROKOLabs/wine-cellar-climate-control.git",
+  "author": "v-sokolic <vanja.sokolic@rokolabs.com>",
+  "license": "MIT"
 }
