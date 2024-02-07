@@ -12,14 +12,13 @@ import {
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 
-import { useSidebar } from 'features/layout/hooks/useSidebar';
+import { useSidebarDispatch } from 'features/layout/hooks/useSidebarDispatch';
 
 export const NavigationBar = () => {
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme('dark');
   const navigate = useNavigate();
-
-  const { toggleSidebar } = useSidebar();
+  const toggleSidebar = useSidebarDispatch();
 
   const toggleColorScheme = () => {
     setColorScheme(computedColorScheme === 'dark' ? 'light' : 'dark');

@@ -7,7 +7,7 @@ import { useSidebar } from './hooks/useSidebar';
 import { Header } from 'features/layout/components/Header/Header';
 
 export const AppLayout = () => {
-  const { isOpen, toggleSidebar } = useSidebar();
+  const [isOpen] = useSidebar();
 
   return (
     <AppShell
@@ -20,7 +20,7 @@ export const AppLayout = () => {
       padding="md"
     >
       <AppShell.Header>
-        <Header opened={isOpen} toggle={toggleSidebar} />
+        <Header />
       </AppShell.Header>
       <AppShell.Navbar p="md" style={{ width: 60 }}>
         <NavigationBar />

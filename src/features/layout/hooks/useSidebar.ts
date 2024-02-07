@@ -1,5 +1,10 @@
-import { useContext } from 'react';
+import { DispatchWithoutAction } from 'react';
 
-import { SidebarContext } from 'features/layout/SidebarContext';
+import { useSidebarDispatch } from 'features/layout/hooks/useSidebarDispatch';
+import { useSidebarState } from 'features/layout/hooks/useSidebarState';
 
-export const useSidebar = () => useContext(SidebarContext);
+export const useSidebar = (): [boolean, DispatchWithoutAction] => {
+  const state = useSidebarState();
+  const dispatch = useSidebarDispatch();
+  return [state, dispatch];
+};

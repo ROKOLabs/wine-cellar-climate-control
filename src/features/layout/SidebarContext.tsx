@@ -1,23 +1,24 @@
-import { createContext, useState, ReactNode } from 'react';
+import {
+  createContext,
+  DispatchWithoutAction,
+  ReactNode,
+  useReducer,
+} from 'react';
 
-export const SidebarContext = createContext<{
-  isOpen: boolean;
-  toggleSidebar: () => void;
-}>({
-  isOpen: false,
-  toggleSidebar: () => {},
-});
+export const SidebarContext = createContext<boolean | null>(null);
+export const SidebarDispatchContext =
+  createContext<DispatchWithoutAction | null>(null);
 
-export const SidebarProvider = ({ children }: { children: ReactNode }) => {
-  const [isOpen, setIsOpen] = useState(false);
+type SidebarProviderProps = { children: ReactNode };
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
+export const SidebarProvider = ({ children }: SidebarProviderProps) => {
+  const [isOpen, toggleSidebar] = useReducer((s) => !s, false);
 
   return (
-    <SidebarContext.Provider value={{ isOpen, toggleSidebar }}>
-      {children}
+    <SidebarContext.Provider value={isOpen}>
+      <SidebarDispatchContext.Provider value={toggleSidebar}>
+        {children}
+      </SidebarDispatchContext.Provider>
     </SidebarContext.Provider>
   );
 };

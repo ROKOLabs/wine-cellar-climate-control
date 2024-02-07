@@ -4,13 +4,11 @@ import { IconGlassFullFilled, IconLogout, IconUser } from '@tabler/icons-react';
 import styles from './Header.module.css';
 
 import { IconTooltip } from 'features/layout/components/IconTooltip';
+import { useSidebar } from 'features/layout/hooks/useSidebar';
 
-type HeaderProps = {
-  opened: boolean;
-  toggle: () => void;
-};
+export const Header = () => {
+  const [isOpen, toggleSidebar] = useSidebar();
 
-export const Header = (props: HeaderProps) => {
   // TODO: Check if the user is logged in
   const userLoggedIn = true;
 
@@ -25,8 +23,8 @@ export const Header = (props: HeaderProps) => {
         <Burger
           size="sm"
           hiddenFrom="sm"
-          opened={props.opened}
-          onClick={props.toggle}
+          opened={isOpen}
+          onClick={toggleSidebar}
         />
         <IconGlassFullFilled className={styles.logo} />
         <Title order={3} className={styles.title}>
