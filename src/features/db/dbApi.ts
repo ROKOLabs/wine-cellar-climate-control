@@ -1,37 +1,48 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import { DbService } from 'features/db/DbService';
-
-type User = {
-  email: string;
-  lastname: string;
-  name: string;
-  username: string;
-};
-
-type GetUserDetailsResponse = User | undefined;
-type GetUserDetailsArg = string;
+import {
+  DbService,
+  GetUserDetailsArg,
+  GetUserDetailsResponse,
+  SetUserDetailsArg,
+  SetUserDetailsResponse,
+} from 'features/db/DbService';
 
 const formatData = <T>(data: T) => ({ data });
 const formatError = (error: Error) => ({ error });
 
+const dbTags = {
+  UserDetails: 'UserDetails',
+};
+
 export const dbApi = createApi({
   reducerPath: 'dbApi',
-  tagTypes: ['UserDetails'],
+  tagTypes: Object.values(dbTags),
   baseQuery: fakeBaseQuery(),
   endpoints: (builder) => ({
     getUserDetails: builder.query<GetUserDetailsResponse, GetUserDetailsArg>({
-      providesTags: ['UserDetails'],
+      providesTags: [dbTags.UserDetails],
       queryFn: (queryArg) =>
         DbService.getInstance()
           .getUserDetails(queryArg)
           .then(formatData)
           .catch(formatError),
     }),
+
+    setUserDetails: builder.mutation<SetUserDetailsResponse, SetUserDetailsArg>(
+      {
+        invalidatesTags: [dbTags.UserDetails],
+        queryFn: (user) =>
+          DbService.getInstance()
+            .setUserDetails(user)
+            .then(formatData)
+            .catch(formatError),
+      },
+    ),
   }),
 });
 
-export const { useGetUserDetailsQuery } = dbApi;
+export const { useGetUserDetailsQuery, useSetUserDetailsMutation } = dbApi;
 
 export const useLazyGetUserDetailsQuerySubscription =
   dbApi.endpoints.getUserDetails.useLazyQuerySubscription;

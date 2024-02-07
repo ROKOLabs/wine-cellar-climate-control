@@ -16,15 +16,20 @@ import { complement, not } from 'ramda';
 
 import { app } from 'firebase/firebase';
 
-type RootCollection = 'users' | 'settings' | 'sensors';
-type FirestorePath = `${RootCollection}` | `${RootCollection}/${string}`;
-
-type User = {
+export type User = {
   email: string;
   lastname: string;
   name: string;
   username: string;
 };
+
+export type GetUserDetailsResponse = User | undefined;
+export type GetUserDetailsArg = string;
+export type SetUserDetailsArg = Partial<User> & { uid: string };
+export type SetUserDetailsResponse = void;
+
+type RootCollection = 'users' | 'settings' | 'sensors';
+type FirestorePath = `${RootCollection}` | `${RootCollection}/${string}`;
 
 // Utility functions
 const isSnapshotEmpty = (snapshot: QuerySnapshot) => snapshot.empty;
@@ -80,11 +85,10 @@ export class DbService {
 
   /**
    * Sets user details by UID.
-   * @param uid - The user ID to set details for.
-   * @param details - The details to set.
+   * @param {SetUserDetailsArg} param0 - The user ID and details to set.
    * @returns - A promise that resolves when the details are set.
    */
-  public setUserDetails = (uid: string, details: Partial<User>) => {
+  public setUserDetails = ({ uid, ...details }: SetUserDetailsArg) => {
     const userDocRef = this.#getDocRef(`users/${uid}`);
     return setDoc(userDocRef, details);
   };
