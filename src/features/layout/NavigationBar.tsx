@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useSidebar } from './hooks/useSidebar';
 
-export default function NavigationBar() {
+export const NavigationBar = () => {
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme('dark');
   const navigate = useNavigate();
@@ -55,4 +55,4 @@ export default function NavigationBar() {
       </Stack>
     </Stack>
   );
-}
+};

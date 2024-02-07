@@ -1,3 +1,10 @@
+import { TestButton } from 'components/LoginButton';
+
 export const Login = () => {
-  return <div>Login</div>;
+  return (
+    <div>
+      Login Page
+      <TestButton />
+    </div>
+  );
 };

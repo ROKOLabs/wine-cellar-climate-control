@@ -1,15 +1,14 @@
-import { createContext } from 'react';
+import { createContext, useState } from 'react';
 
-import { authService } from 'features/auth/AuthService';
-import { useAuthStateChanged } from 'features/auth/hooks/useAuthStateChanged';
+import { AuthService } from 'features/auth/service/AuthService';
 
-export const AuthServiceContext = createContext(authService);
+export const AuthServiceContext = createContext<AuthService | null>(null);
 
 type AuthProviderProps = {
   children: React.ReactNode;
 };
 export const AuthProvider = (props: AuthProviderProps) => {
-  useAuthStateChanged(authService.onAuthStateChanged);
+  const [authService] = useState(() => AuthService.getInstance());
   return (
     <AuthServiceContext.Provider value={authService}>
       {props.children}

@@ -1,11 +1,14 @@
-import { AppShell, Burger, Group } from '@mantine/core';
+import { AppShell } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { Outlet } from 'react-router-dom';
 
-import NavigationBar from './NavigationBar';
-import { useSidebar } from './hooks/useSidebar';
+import { NavigationBar } from './NavigationBar';
+// import { useSidebar } from './hooks/useSidebar';
 
-export default function AppLayout() {
-  const { isOpen, toggleSidebar } = useSidebar();
+import { Header } from 'features/layout/components/Header/Header';
+
+export const AppLayout = () => {
+  const [opened, { toggle }] = useDisclosure();
 
   return (
     <AppShell
@@ -13,20 +16,12 @@ export default function AppLayout() {
       navbar={{
         width: 60,
         breakpoint: 'sm',
-        collapsed: { mobile: !isOpen },
+        collapsed: { mobile: opened },
       }}
       padding="md"
     >
       <AppShell.Header>
-        <Group h="100%" px="md">
-          <Burger
-            opened={isOpen}
-            onClick={toggleSidebar}
-            hiddenFrom="sm"
-            size="sm"
-          />
-          Wine Cellar Climate Control
-        </Group>
+        <Header opened={opened} toggle={toggle} />
       </AppShell.Header>
       <AppShell.Navbar p="md" style={{ width: 60 }}>
         <NavigationBar />
@@ -36,4 +31,4 @@ export default function AppLayout() {
       </AppShell.Main>
     </AppShell>
   );
-}
+};

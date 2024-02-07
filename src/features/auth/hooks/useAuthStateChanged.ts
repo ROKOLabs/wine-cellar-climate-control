@@ -1,22 +1,32 @@
-import pipe from 'lodash/fp/pipe';
-import tap from 'lodash/fp/tap';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
 
-import { AuthService } from 'features/auth/AuthService';
-import { setUser } from 'features/auth/authSlice';
+import { useAuthService } from 'features/auth/hooks/useAuthService';
+import {
+  resetDbApiState,
+  useLazyGetUserDetailsQuerySubscription,
+} from 'features/db/dbApi';
 import { useAppDispatch } from 'store/hooks';
 
-type OnAuthStateChanged = AuthService['onAuthStateChanged'];
+// TODO: Notify the user about the error getting the details
+const handleDetailsError = (error: unknown) =>
+  console.error('Error getting user details', error);
 
-export const useAuthStateChanged = (onAuthStateChanged: OnAuthStateChanged) => {
+export const useAuthStateChanged = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const authService = useAuthService();
+  const [getDetailsSubscription] = useLazyGetUserDetailsQuerySubscription();
+
   useEffect(() => {
-    return onAuthStateChanged(
-      pipe(
-        tap((x) => console.log('onAuthStateChanged ->', x)),
-        setUser,
-        dispatch,
-      ),
-    );
-  }, [dispatch, onAuthStateChanged]);
+    return authService.onAuthStateChanged((user) => {
+      if (user) {
+        getDetailsSubscription(user.uid).catch(handleDetailsError);
+        navigate('/home');
+      } else {
+        dispatch(resetDbApiState());
+        navigate('/login');
+      }
+    });
+  }, [authService, dispatch, getDetailsSubscription, navigate]);
 };

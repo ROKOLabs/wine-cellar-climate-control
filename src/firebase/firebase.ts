@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { browserLocalPersistence, initializeAuth } from 'firebase/auth';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -12,9 +12,9 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
-initializeApp(firebaseConfig);
-
-const auth = getAuth();
-
-export { auth, onAuthStateChanged };
+// initialize Firebase App
+export const app = initializeApp(firebaseConfig);
+// initialize Firebase Auth for that app immediately
+export const auth = initializeAuth(app, {
+  persistence: browserLocalPersistence,
+});

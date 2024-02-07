@@ -1,0 +1,91 @@
+import type { DocumentData } from 'firebase/firestore';
+import {
+  getFirestore,
+  collection,
+  where,
+  query,
+  getDocs,
+  doc,
+  getDoc,
+  DocumentSnapshot,
+  QuerySnapshot,
+  Firestore,
+  setDoc,
+} from 'firebase/firestore';
+import { complement, not } from 'ramda';
+
+import { app } from 'firebase/firebase';
+
+type RootCollection = 'users' | 'settings' | 'sensors';
+type FirestorePath = `${RootCollection}` | `${RootCollection}/${string}`;
+
+type User = {
+  email: string;
+  lastname: string;
+  name: string;
+  username: string;
+};
+
+// Utility functions
+const isSnapshotEmpty = (snapshot: QuerySnapshot) => snapshot.empty;
+const isSnapshotNotEmpty = complement(isSnapshotEmpty);
+const getSnapshotData = <T = DocumentData>(snapshot: DocumentSnapshot) =>
+  snapshot.data() as T | undefined;
+
+// Firestore reference getters
+const getDocRef = (db: Firestore) => (path: FirestorePath) => doc(db, path);
+const getCollRef = (db: Firestore) => (path: FirestorePath) =>
+  collection(db, path);
+
+export class DbService {
+  static #instance: DbService;
+  #db;
+  #getDocRef;
+  #getCollRef;
+
+  private constructor(appInstance: typeof app) {
+    this.#db = getFirestore(appInstance);
+    this.#getDocRef = getDocRef(this.#db);
+    this.#getCollRef = getCollRef(this.#db);
+  }
+
+  public static getInstance(appInstance: typeof app = app) {
+    if (not(Boolean(DbService.#instance)))
+      DbService.#instance = new DbService(appInstance);
+    return DbService.#instance;
+  }
+
+  /**
+   * Checks if the given username is already taken.
+   * @param {string} username - The username to check.
+   * @returns {Promise<boolean>} - True if username is taken, false otherwise.
+   */
+  public isUsernameTaken = (username: string) => {
+    const collectionRef = this.#getCollRef('users');
+    const userQuery = query(collectionRef, where('username', '==', username));
+    return getDocs(userQuery).then(isSnapshotNotEmpty);
+  };
+
+  /**
+   * Retrieves user details by UID.
+   * @param {string} uid - The user ID to retrieve details for.
+   * @returns {Promise<User | undefined>} - User details object.
+   */
+  public getUserDetails = (uid: string) => {
+    const userDocRef = this.#getDocRef(`users/${uid}`);
+
+    // TODO: Verify user details retrieved
+    return getDoc(userDocRef).then(getSnapshotData<User>);
+  };
+
+  /**
+   * Sets user details by UID.
+   * @param uid - The user ID to set details for.
+   * @param details - The details to set.
+   * @returns - A promise that resolves when the details are set.
+   */
+  public setUserDetails = (uid: string, details: Partial<User>) => {
+    const userDocRef = this.#getDocRef(`users/${uid}`);
+    return setDoc(userDocRef, details);
+  };
+}

@@ -1,30 +1,56 @@
 import { Button, Group } from '@mantine/core';
 
-import { useAuthService } from 'features/auth/hooks/useAuthService';
+import {
+  useLoginMutation,
+  useLogoutMutation,
+  useRegisterMutation,
+} from 'features/auth/authApi';
+import { tapX } from 'utility/fp/tapX';
+
+const REGISTRATION_DATA = {
+  username: 'ivbrajkovic1',
+  email: 'ivan.brajkovic1@icloud.com',
+  password: '123456',
+  name: 'Ivan',
+  lastname: 'Brajkovic',
+};
+
+const LOGIN_DATA = {
+  email: 'ivan.brajkovic1@icloud.com',
+  password: '123456',
+};
 
 export const TestButton = () => {
-  const authService = useAuthService();
+  const [register, { isLoading: isRegisterLoading }] = useRegisterMutation();
+  const [logout, { isLoading: isLogoutLoading }] = useLogoutMutation();
+  const [login, { isLoading: isLoginLoading }] = useLoginMutation();
 
   const handleRegister = () =>
-    authService
-      .register('test@gmail.com', 'password1234')
-      .then(console.log)
-      .catch(console.error);
+    register(REGISTRATION_DATA)
+      // .then(goToHome)
+      .catch(tapX('registration error'));
 
   const handleLogin = () =>
-    authService
-      .login('test@gmail.com', 'password1234')
-      .then(console.log)
-      .catch(console.error);
+    login(LOGIN_DATA) //
+      // .then(goToHome)
+      .catch(tapX('login error'));
 
   const handleLogout = () =>
-    authService.logout().then(console.log).catch(console.error);
+    logout() //
+      // .then(goToLogin)
+      .catch(tapX('logout error'));
 
   return (
     <Group>
-      <Button onClick={handleRegister}>Register</Button>
-      <Button onClick={handleLogin}>Login</Button>
-      <Button onClick={handleLogout}>Logout</Button>
+      <Button loading={isRegisterLoading} onClick={handleRegister}>
+        Register
+      </Button>
+      <Button loading={isLoginLoading} onClick={handleLogin}>
+        Login
+      </Button>
+      <Button loading={isLogoutLoading} onClick={handleLogout}>
+        Logout
+      </Button>
     </Group>
   );
 };
