@@ -5,7 +5,7 @@ type NavbarTooltipProps = TooltipProps & {
   children: ReactNode;
 };
 
-export const IconTooltip = (props: NavbarTooltipProps) => (
+export const ActionTooltip = (props: NavbarTooltipProps) => (
   <Tooltip
     offset={10}
     position="right"
