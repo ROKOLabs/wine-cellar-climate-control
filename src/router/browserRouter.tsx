@@ -5,7 +5,7 @@ import { AuthStateChangeGuard } from 'features/auth/components/AuthStateChangeGu
 import { Login } from 'features/auth/pages/Login';
 import { Register } from 'features/auth/pages/Register';
 import { Home } from 'features/home/Home';
-import { WithProvider } from 'features/layout/HOC/WithProvider';
+import { Layout } from 'features/layout/Layout';
 import { authorizationLoader } from 'router/loaders/authorizationLoader';
 import { protectedLoader } from 'router/loaders/protectedLoader';
 
@@ -14,7 +14,7 @@ export const browserRouter = createBrowserRouter([
     Component: AuthStateChangeGuard,
     children: [
       {
-        Component: WithProvider,
+        Component: Layout,
         children: [
           {
             loader: protectedLoader,

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { SidebarDispatchContext } from 'features/layout/SidebarContext';
+import { SidebarDispatchContext } from 'features/layout/provider/SidebarProvider';
 
 export const useSidebarDispatch = () => {
   const dispatch = useContext(SidebarDispatchContext);
