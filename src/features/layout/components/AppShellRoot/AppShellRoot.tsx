@@ -1,6 +1,8 @@
 import { AppShell } from '@mantine/core';
 import { ReactNode } from 'react';
 
+import classes from './AppShellRoot.module.css';
+
 import { useSidebar } from 'features/layout/hooks/useSidebar';
 
 type AppLayoutProps = { children: ReactNode };
@@ -10,13 +12,14 @@ export const AppShellRoot = ({ children }: AppLayoutProps) => {
 
   return (
     <AppShell
-      header={{ height: 60 }}
+      padding={{ base: 'sm', sm: 'xl' }}
+      header={{ height: { base: 56 } }}
       navbar={{
-        width: 60,
+        width: { base: 56 },
         breakpoint: 'sm',
         collapsed: { mobile: !isOpen },
       }}
-      padding="md"
+      classNames={{ main: classes.main }}
     >
       {children}
     </AppShell>

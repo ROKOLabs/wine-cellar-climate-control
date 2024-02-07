@@ -3,7 +3,7 @@ import { IconGlassFullFilled, IconLogout, IconUser } from '@tabler/icons-react';
 
 import styles from './Header.module.css';
 
-import { IconTooltip } from 'features/layout/components/IconTooltip';
+import { ActionTooltip } from 'components/ActionTooltip';
 import { useSidebar } from 'features/layout/hooks/useSidebar';
 
 export const Header = () => {
@@ -33,7 +33,7 @@ export const Header = () => {
       </Group>
 
       {userLoggedIn ? (
-        <IconTooltip label="Log out">
+        <ActionTooltip label="Log out">
           <ActionIcon
             size="lg"
             radius="md"
@@ -42,13 +42,13 @@ export const Header = () => {
           >
             <IconLogout size={22} />
           </ActionIcon>
-        </IconTooltip>
+        </ActionTooltip>
       ) : (
-        <IconTooltip label="User profile">
+        <ActionTooltip label="User profile">
           <ActionIcon size="lg" radius="md" variant="subtle">
             <IconUser size={22} />
           </ActionIcon>
-        </IconTooltip>
+        </ActionTooltip>
       )}
     </Group>
   );
