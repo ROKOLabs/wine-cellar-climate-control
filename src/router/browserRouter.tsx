@@ -25,14 +25,14 @@ export const browserRouter = createBrowserRouter([
               { path: '/settings', Component: Settings },
             ],
           },
-        ],
-      },
-      {
-        loader: authorizationLoader,
-        children: [
-          // Public routes
-          { path: '/login', Component: Login },
-          { path: '/register', Component: Register },
+          {
+            loader: authorizationLoader,
+            children: [
+              // Public routes
+              { path: '/login', Component: Login },
+              { path: '/register', Component: Register },
+            ],
+          },
         ],
       },
     ],
