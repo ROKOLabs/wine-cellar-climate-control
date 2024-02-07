@@ -1,16 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Paper, TextInput, PasswordInput, Button } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 
 import { useRegisterMutation } from 'features/auth/authApi';
 import { RegisterSchema } from 'features/auth/pages/config';
 import { navigate } from 'router/utility/navigate';
-
-interface Props {
-  createSuccessNotification: () => void;
-  createErrorNotification: (arg: string) => void;
-  resetNotification: () => void;
-}
 
 interface IRegisterForm {
   email: string;
@@ -18,11 +13,7 @@ interface IRegisterForm {
   confirmPassword: string;
 }
 
-export const RegisterForm = ({
-  createSuccessNotification,
-  createErrorNotification,
-  resetNotification,
-}: Props) => {
+export const RegisterForm = () => {
   const [register] = useRegisterMutation();
 
   const {
@@ -43,17 +34,29 @@ export const RegisterForm = ({
     password,
   }) => {
     try {
-      resetNotification();
-      await register({ email, password });
-      createSuccessNotification();
+      notifications.clean();
+      await register({ email, password }).unwrap();
+      notifications.show({
+        title: 'Congratulations!',
+        message:
+          'Your account is all set up and you will now be redirected to the Login page',
+        color: 'green',
+        withBorder: true,
+        withCloseButton: false,
+      });
       setTimeout(() => {
         navigate('/login');
       }, 5000);
     } catch (error) {
       console.error('authService.register error...', error);
-      createErrorNotification(
-        'It seems something went wrong on our end. Please try again later',
-      );
+      notifications.show({
+        title: 'Oops!',
+        message:
+          'It seems something went wrong on our end. Please try again later',
+        color: 'red',
+        withBorder: true,
+        withCloseButton: false,
+      });
     }
   };
 

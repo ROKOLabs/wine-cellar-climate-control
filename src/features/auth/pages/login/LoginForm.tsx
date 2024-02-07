@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Paper, TextInput, PasswordInput, Button } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import { FirebaseError } from 'firebase/app';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 
@@ -7,20 +8,12 @@ import { useLoginMutation } from 'features/auth/authApi';
 import { LoginSchema } from 'features/auth/pages/config';
 import { navigate } from 'router/utility/navigate';
 
-interface Props {
-  createErrorNotification: (arg: string) => void;
-  resetNotification: () => void;
-}
-
 interface ILoginForm {
   email: string;
   password: string;
 }
 
-export const LoginForm = ({
-  createErrorNotification,
-  resetNotification,
-}: Props) => {
+export const LoginForm = () => {
   const [login] = useLoginMutation();
 
   const {
@@ -37,8 +30,8 @@ export const LoginForm = ({
 
   const onSubmit: SubmitHandler<ILoginForm> = async ({ email, password }) => {
     try {
-      resetNotification();
-      await login({ email, password });
+      notifications.clean();
+      await login({ email, password }).unwrap();
       navigate('/');
     } catch (error) {
       handleErrors(error);
@@ -58,7 +51,13 @@ export const LoginForm = ({
           "User not found. Please check your credentials or sign up if you're new";
       }
     }
-    createErrorNotification(err);
+    notifications.show({
+      title: 'Oops!',
+      message: err,
+      color: 'red',
+      withBorder: true,
+      withCloseButton: false,
+    });
   };
 
   return (

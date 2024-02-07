@@ -1,17 +1,9 @@
-import { Flex, Title, Anchor, Text, Notification } from '@mantine/core';
+import { Flex, Title, Anchor, Text } from '@mantine/core';
 
-import { useNotification } from 'features/auth/hooks/useNotification';
 import { RegisterForm } from 'features/auth/pages/register/RegisterForm';
 import { navigate } from 'router/utility/navigate';
 
 export const Register = () => {
-  const {
-    notification,
-    createSuccessNotification,
-    createErrorNotification,
-    resetNotification,
-  } = useNotification();
-
   const navigateToLogin = () => {
     navigate('/login');
   };
@@ -35,23 +27,7 @@ export const Register = () => {
         </Anchor>
       </Text>
 
-      <RegisterForm
-        createSuccessNotification={createSuccessNotification}
-        createErrorNotification={createErrorNotification}
-        resetNotification={resetNotification}
-      />
-
-      {notification.type && (
-        <Notification
-          title={notification.title}
-          color={notification.color}
-          withBorder
-          withCloseButton={false}
-          mt="xl"
-        >
-          {notification.msg}
-        </Notification>
-      )}
+      <RegisterForm />
     </Flex>
   );
 };
