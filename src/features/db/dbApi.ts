@@ -1,9 +1,11 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { Unsubscribe } from 'firebase/firestore';
 
 import {
   DbService,
   GetUserDetailsArg,
   GetUserDetailsResponse,
+  SensorData,
   SetUserDetailsArg,
   SetUserDetailsResponse,
 } from 'features/db/DbService';
@@ -43,10 +45,36 @@ export const dbApi = createApi({
             .catch(formatError),
       },
     ),
+
+    getSensorData: builder.query<SensorData[], void>({
+      queryFn: () => ({ data: [] }),
+      onCacheEntryAdded: async (
+        _,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
+      ) => {
+        let unsubscribe: Unsubscribe | undefined;
+        try {
+          await cacheDataLoaded;
+          const listener = (data: SensorData) => {
+            updateCachedData((draft) => {
+              draft.push(data);
+            });
+          };
+          unsubscribe = DbService.getInstance().getSensorData(listener);
+          // eslint-disable-next-line no-empty
+        } catch {}
+        await cacheEntryRemoved;
+        unsubscribe?.();
+      },
+    }),
   }),
 });
 
-export const { useGetUserDetailsQuery, useSetUserDetailsMutation } = dbApi;
+export const {
+  useGetUserDetailsQuery,
+  useSetUserDetailsMutation,
+  useGetSensorDataQuery,
+} = dbApi;
 
 export const useLazyGetUserDetailsQuerySubscription =
   dbApi.endpoints.getUserDetails.useLazyQuerySubscription;
