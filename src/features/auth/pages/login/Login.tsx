@@ -1,4 +1,4 @@
-import { Flex, Title, Anchor, Text } from '@mantine/core';
+import { Stack, Title, Anchor, Text } from '@mantine/core';
 
 import { LoginForm } from 'features/auth/pages/login/LoginForm';
 import { navigate } from 'router/utility/navigate';
@@ -9,15 +9,7 @@ export const Login = () => {
   };
 
   return (
-    <Flex
-      mih="100vh"
-      direction="column"
-      justify="center"
-      align="center"
-      maw="90%"
-      mx="auto"
-      py="lg"
-    >
+    <Stack h="100%" justify="center">
       <Title ta="center">Wine Cellar Climate Control</Title>
 
       <Text ta="center" size="sm" c="dimmed" mt="xs">
@@ -28,6 +20,6 @@ export const Login = () => {
       </Text>
 
       <LoginForm />
-    </Flex>
+    </Stack>
   );
 };
