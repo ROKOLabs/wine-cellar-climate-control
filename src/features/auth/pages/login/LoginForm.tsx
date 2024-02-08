@@ -14,7 +14,7 @@ interface ILoginForm {
 }
 
 export const LoginForm = () => {
-  const [login] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
 
   const {
     control,
@@ -97,7 +97,7 @@ export const LoginForm = () => {
           )}
         />
 
-        <Button type="submit" fullWidth mt="xl">
+        <Button type="submit" fullWidth mt="xl" loading={isLoading}>
           Login
         </Button>
       </Paper>

@@ -5,16 +5,20 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 
 import { useRegisterMutation } from 'features/auth/authApi';
 import { RegisterSchema } from 'features/auth/pages/config';
-import { navigate } from 'router/utility/navigate';
+import { useSetUserDetailsMutation } from 'features/db/dbApi';
 
 interface IRegisterForm {
+  name: string;
+  lastname: string;
   email: string;
+  username: string;
   password: string;
   confirmPassword: string;
 }
 
 export const RegisterForm = () => {
-  const [register] = useRegisterMutation();
+  const [register, { isLoading }] = useRegisterMutation();
+  const [setUserDetails] = useSetUserDetailsMutation();
 
   const {
     control,
@@ -22,7 +26,10 @@ export const RegisterForm = () => {
     formState: { errors },
   } = useForm<IRegisterForm>({
     defaultValues: {
+      name: '',
+      lastname: '',
       email: '',
+      username: '',
       password: '',
       confirmPassword: '',
     },
@@ -30,12 +37,21 @@ export const RegisterForm = () => {
   });
 
   const onSubmit: SubmitHandler<IRegisterForm> = async ({
+    name,
+    lastname,
     email,
+    username,
     password,
   }) => {
     try {
       notifications.clean();
-      await register({ email, password }).unwrap();
+      const { user } = await register({ email, password }).unwrap();
+      await setUserDetails({
+        uid: user.uid,
+        name,
+        lastname,
+        username,
+      }).unwrap();
       notifications.show({
         title: 'Congratulations!',
         message:
@@ -44,9 +60,6 @@ export const RegisterForm = () => {
         withBorder: true,
         withCloseButton: false,
       });
-      setTimeout(() => {
-        navigate('/login');
-      }, 5000);
     } catch (error) {
       console.error('authService.register error...', error);
       notifications.show({
@@ -71,6 +84,34 @@ export const RegisterForm = () => {
     >
       <Paper withBorder shadow="md" p="xl" radius="md">
         <Controller
+          name="name"
+          control={control}
+          render={({ field }) => (
+            <TextInput
+              {...field}
+              label="First name"
+              mt="lg"
+              withAsterisk
+              error={errors.name?.message}
+            />
+          )}
+        />
+
+        <Controller
+          name="lastname"
+          control={control}
+          render={({ field }) => (
+            <TextInput
+              {...field}
+              label="Last name"
+              mt="lg"
+              withAsterisk
+              error={errors.lastname?.message}
+            />
+          )}
+        />
+
+        <Controller
           name="email"
           control={control}
           render={({ field }) => (
@@ -80,6 +121,20 @@ export const RegisterForm = () => {
               mt="lg"
               withAsterisk
               error={errors.email?.message}
+            />
+          )}
+        />
+
+        <Controller
+          name="username"
+          control={control}
+          render={({ field }) => (
+            <TextInput
+              {...field}
+              label="Username"
+              mt="lg"
+              withAsterisk
+              error={errors.username?.message}
             />
           )}
         />
@@ -112,7 +167,7 @@ export const RegisterForm = () => {
           )}
         />
 
-        <Button type="submit" fullWidth mt="xl">
+        <Button type="submit" fullWidth mt="xl" loading={isLoading}>
           Register
         </Button>
       </Paper>
