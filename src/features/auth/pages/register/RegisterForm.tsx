@@ -6,7 +6,6 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { useRegisterMutation } from 'features/auth/authApi';
 import { RegisterSchema } from 'features/auth/pages/config';
 import { useSetUserDetailsMutation } from 'features/db/dbApi';
-import { navigate } from 'router/utility/navigate';
 
 interface IRegisterForm {
   name: string;
@@ -61,9 +60,6 @@ export const RegisterForm = () => {
         withBorder: true,
         withCloseButton: false,
       });
-      setTimeout(() => {
-        navigate('/login');
-      }, 5000);
     } catch (error) {
       console.error('authService.register error...', error);
       notifications.show({
