@@ -7,9 +7,13 @@ import {
   SetUserDetailsArg,
   SetUserDetailsResponse,
 } from 'features/db/DbService';
+import { isFirebaseError } from 'features/db/guards/guards';
 
 const formatData = <T>(data: T) => ({ data });
-const formatError = (error: Error) => ({ error });
+const formatError = (error: Error) => {
+  if (isFirebaseError(error)) error = JSON.parse(JSON.stringify(error));
+  return { error };
+};
 
 const dbTags = {
   UserDetails: 'UserDetails',

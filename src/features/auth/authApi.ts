@@ -1,5 +1,6 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 
+import { isFirebaseError } from 'features/auth/guards/guards';
 import { AuthService } from 'features/auth/service/AuthService';
 import { ExtractPromise } from 'types';
 
@@ -16,7 +17,10 @@ type LogOutArg = Parameters<AuthService['logout']>;
 type LogOutResponse = ExtractPromise<ReturnType<AuthService['logout']>>;
 
 const formatData = <T>(data: T) => ({ data });
-const formatError = (error: Error) => ({ error });
+const formatError = (error: Error) => {
+  if (isFirebaseError(error)) error = JSON.parse(JSON.stringify(error));
+  return { error };
+};
 
 export const authApi = createApi({
   reducerPath: 'authApi',
