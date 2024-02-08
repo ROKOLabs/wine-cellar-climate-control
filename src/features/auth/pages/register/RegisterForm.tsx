@@ -14,7 +14,7 @@ interface IRegisterForm {
 }
 
 export const RegisterForm = () => {
-  const [register] = useRegisterMutation();
+  const [register, { isLoading }] = useRegisterMutation();
 
   const {
     control,
@@ -112,7 +112,7 @@ export const RegisterForm = () => {
           )}
         />
 
-        <Button type="submit" fullWidth mt="xl">
+        <Button type="submit" fullWidth mt="xl" loading={isLoading}>
           Register
         </Button>
       </Paper>
