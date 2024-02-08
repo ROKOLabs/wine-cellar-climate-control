@@ -13,9 +13,6 @@ type LoginResponse = Pick<
   'uid' | 'email' | 'displayName' | 'photoURL'
 >;
 
-type LogOutArg = Parameters<AuthService['logout']>;
-type LogOutResponse = ExtractPromise<ReturnType<AuthService['logout']>>;
-
 const formatData = <T>(data: T) => ({ data });
 const formatError = (error: Error) => {
   if (isFirebaseError(error)) error = JSON.parse(JSON.stringify(error));
@@ -49,7 +46,7 @@ export const authApi = createApi({
           .catch(formatError),
     }),
 
-    logout: builder.mutation<LogOutResponse, LogOutArg>({
+    logout: builder.mutation<void, void>({
       queryFn: () =>
         AuthService.getInstance() //
           .logout()
