@@ -5,16 +5,21 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 
 import { useRegisterMutation } from 'features/auth/authApi';
 import { RegisterSchema } from 'features/auth/pages/config';
+import { useSetUserDetailsMutation } from 'features/db/dbApi';
 import { navigate } from 'router/utility/navigate';
 
 interface IRegisterForm {
+  name: string;
+  lastname: string;
   email: string;
+  username: string;
   password: string;
   confirmPassword: string;
 }
 
 export const RegisterForm = () => {
   const [register, { isLoading }] = useRegisterMutation();
+  const [setUserDetails] = useSetUserDetailsMutation();
 
   const {
     control,
@@ -22,7 +27,10 @@ export const RegisterForm = () => {
     formState: { errors },
   } = useForm<IRegisterForm>({
     defaultValues: {
+      name: '',
+      lastname: '',
       email: '',
+      username: '',
       password: '',
       confirmPassword: '',
     },
@@ -30,12 +38,21 @@ export const RegisterForm = () => {
   });
 
   const onSubmit: SubmitHandler<IRegisterForm> = async ({
+    name,
+    lastname,
     email,
+    username,
     password,
   }) => {
     try {
       notifications.clean();
-      await register({ email, password }).unwrap();
+      const { user } = await register({ email, password }).unwrap();
+      await setUserDetails({
+        uid: user.uid,
+        name,
+        lastname,
+        username,
+      }).unwrap();
       notifications.show({
         title: 'Congratulations!',
         message:
@@ -71,6 +88,34 @@ export const RegisterForm = () => {
     >
       <Paper withBorder shadow="md" p="xl" radius="md">
         <Controller
+          name="name"
+          control={control}
+          render={({ field }) => (
+            <TextInput
+              {...field}
+              label="First name"
+              mt="lg"
+              withAsterisk
+              error={errors.name?.message}
+            />
+          )}
+        />
+
+        <Controller
+          name="lastname"
+          control={control}
+          render={({ field }) => (
+            <TextInput
+              {...field}
+              label="Last name"
+              mt="lg"
+              withAsterisk
+              error={errors.lastname?.message}
+            />
+          )}
+        />
+
+        <Controller
           name="email"
           control={control}
           render={({ field }) => (
@@ -80,6 +125,20 @@ export const RegisterForm = () => {
               mt="lg"
               withAsterisk
               error={errors.email?.message}
+            />
+          )}
+        />
+
+        <Controller
+          name="username"
+          control={control}
+          render={({ field }) => (
+            <TextInput
+              {...field}
+              label="Username"
+              mt="lg"
+              withAsterisk
+              error={errors.username?.message}
             />
           )}
         />
