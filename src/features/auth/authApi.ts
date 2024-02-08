@@ -1,17 +1,19 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { AuthService } from 'features/auth/service/AuthService';
+import { ExtractPromise } from 'types';
 
-type RegisterResponserResponse = ReturnType<AuthService['register']>;
-type RegisterResponseArg = Parameters<AuthService['register']>[0];
+type RegisterArg = Parameters<AuthService['register']>[0];
+type RegisterResponse = ExtractPromise<ReturnType<AuthService['register']>>;
 
-type LoginResponse = {
-  uid: string;
-  email: string | null;
-  displayName: string | null;
-  photoURL: string | null;
-};
-type LoginResponseArg = Parameters<AuthService['login']>[0];
+type LoginArg = Parameters<AuthService['login']>[0];
+type LoginResponse = Pick<
+  ExtractPromise<ReturnType<AuthService['login']>>['user'],
+  'uid' | 'email' | 'displayName' | 'photoURL'
+>;
+
+type LogOutArg = Parameters<AuthService['logout']>;
+type LogOutResponse = ExtractPromise<ReturnType<AuthService['logout']>>;
 
 const formatData = <T>(data: T) => ({ data });
 const formatError = (error: Error) => ({ error });
@@ -20,15 +22,15 @@ export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fakeBaseQuery(),
   endpoints: (builder) => ({
-    register: builder.mutation<RegisterResponserResponse, RegisterResponseArg>({
-      query: (queryArg) =>
+    register: builder.mutation<RegisterResponse, RegisterArg>({
+      queryFn: (queryArg) =>
         AuthService.getInstance()
           .register(queryArg)
           .then(formatData)
           .catch(formatError),
     }),
 
-    login: builder.mutation<LoginResponse, LoginResponseArg>({
+    login: builder.mutation<LoginResponse, LoginArg>({
       queryFn: (queryArg) =>
         AuthService.getInstance()
           .login(queryArg)
@@ -43,7 +45,7 @@ export const authApi = createApi({
           .catch(formatError),
     }),
 
-    logout: builder.mutation<void, void>({
+    logout: builder.mutation<LogOutResponse, LogOutArg>({
       queryFn: () =>
         AuthService.getInstance() //
           .logout()
