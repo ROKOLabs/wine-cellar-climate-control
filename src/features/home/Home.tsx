@@ -1,18 +1,29 @@
 import { Box, Button, Stack, Text } from '@mantine/core';
+import { skipToken } from '@reduxjs/toolkit/query';
 import { useEffect } from 'react';
 
 import { TestButton } from 'components/LoginButton';
+import { useAuthService } from 'features/auth/hooks/useAuthService';
 import { DbService } from 'features/db/DbService';
-import { useGetSensorDataQuery } from 'features/db/dbApi';
+import {
+  useGetSensorDataQuery,
+  useGetUserDetailsQuery,
+} from 'features/db/dbApi';
 
 const randomNum = (n: number) => Math.floor(Math.random() * n);
 
 export const Home = () => {
-  const { data } = useGetSensorDataQuery();
+  const { userUid } = useAuthService();
+  const { data: sensorData } = useGetSensorDataQuery();
+  const { data: userDetails } = useGetUserDetailsQuery(userUid ?? skipToken);
 
   useEffect(() => {
-    console.log(data);
-  }, [data]);
+    console.log(sensorData);
+  }, [sensorData]);
+
+  useEffect(() => {
+    console.log(userDetails);
+  }, [userDetails]);
 
   const addData = () =>
     DbService.getInstance()

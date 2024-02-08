@@ -1,8 +1,8 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import { isFirebaseError } from 'features/auth/guards/guards';
-import { AuthService } from 'features/auth/service/AuthService';
+import { AuthService } from 'features/auth/AuthService';
 import { ExtractPromise } from 'types';
+import { jsonSafeParse } from 'utility/jsonSafeParse';
 
 type RegisterArg = Parameters<AuthService['register']>[0];
 type RegisterResponse = ExtractPromise<ReturnType<AuthService['register']>>;
@@ -13,11 +13,8 @@ type LoginResponse = Pick<
   'uid' | 'email' | 'displayName' | 'photoURL'
 >;
 
-const formatData = <T>(data: T) => ({ data });
-const formatError = (error: Error) => {
-  if (isFirebaseError(error)) error = JSON.parse(JSON.stringify(error));
-  return { error };
-};
+const formatData = <T>(data: T) => ({ data: jsonSafeParse(data) });
+const formatError = <T>(data: T) => ({ error: jsonSafeParse(data) });
 
 export const authApi = createApi({
   reducerPath: 'authApi',

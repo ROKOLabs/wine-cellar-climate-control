@@ -1,6 +1,6 @@
 import { createContext, useState } from 'react';
 
-import { AuthService } from 'features/auth/service/AuthService';
+import { AuthService } from 'features/auth/AuthService';
 
 export const AuthServiceContext = createContext<AuthService | null>(null);
 

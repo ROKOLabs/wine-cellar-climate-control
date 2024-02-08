@@ -23,6 +23,10 @@ export class AuthService {
     return Boolean(this.#auth.currentUser);
   }
 
+  get userUid() {
+    return this.#auth.currentUser?.uid;
+  }
+
   private constructor(appInstance: typeof app) {
     this.#auth = getAuth(appInstance);
   }

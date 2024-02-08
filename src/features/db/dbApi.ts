@@ -9,13 +9,10 @@ import {
   SetUserDetailsArg,
   SetUserDetailsResponse,
 } from 'features/db/DbService';
-import { isFirebaseError } from 'features/db/guards/guards';
+import { jsonSafeParse } from 'utility/jsonSafeParse';
 
-const formatData = <T>(data: T) => ({ data });
-const formatError = (error: Error) => {
-  if (isFirebaseError(error)) error = JSON.parse(JSON.stringify(error));
-  return { error };
-};
+const formatData = <T>(data: T) => ({ data: jsonSafeParse(data) });
+const formatError = <T>(data: T) => ({ error: jsonSafeParse(data) });
 
 const dbTags = {
   UserDetails: 'UserDetails',
@@ -47,6 +44,7 @@ export const dbApi = createApi({
     ),
 
     getSensorData: builder.query<SensorData[], void>({
+      keepUnusedDataFor: 0,
       queryFn: () => ({ data: [] }),
       onCacheEntryAdded: async (
         _,

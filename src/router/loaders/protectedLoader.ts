@@ -1,6 +1,6 @@
 import { redirect } from 'react-router';
 
-import { AuthService } from 'features/auth/service/AuthService';
+import { AuthService } from 'features/auth/AuthService';
 
 export const protectedLoader = () => {
   if (AuthService.getInstance().isUserLoggedIn) return null;
