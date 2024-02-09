@@ -77,7 +77,7 @@ export const NavigationBar = () => {
                   size="xl"
                   radius="md"
                   variant="filled"
-                  onClick={juxt([toggleSidebar, goHome])}
+                  onClick={juxt([goHome])}
                 >
                   <IconHome2 />
                 </ActionIcon>
@@ -87,7 +87,7 @@ export const NavigationBar = () => {
                   size="xl"
                   radius="md"
                   variant="filled"
-                  onClick={juxt([toggleSidebar, goSettings])}
+                  onClick={juxt([goSettings])}
                 >
                   <IconSettings />
                 </ActionIcon>
@@ -99,7 +99,7 @@ export const NavigationBar = () => {
                   size="xl"
                   radius="md"
                   variant="filled"
-                  onClick={juxt([toggleSidebar, toggleColorScheme])}
+                  onClick={juxt([toggleColorScheme])}
                 >
                   {colorScheme === 'dark' ? <IconSun /> : <IconMoon />}
                 </ActionIcon>
