@@ -1,15 +1,18 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { Unsubscribe } from 'firebase/firestore';
 
 import {
   DbService,
   GetUserDetailsArg,
   GetUserDetailsResponse,
+  SensorData,
   SetUserDetailsArg,
   SetUserDetailsResponse,
 } from 'features/db/DbService';
+import { jsonSafeParse } from 'utility/jsonSafeParse';
 
-const formatData = <T>(data: T) => ({ data });
-const formatError = (error: Error) => ({ error });
+const formatData = <T>(data: T) => ({ data: jsonSafeParse(data) });
+const formatError = <T>(data: T) => ({ error: jsonSafeParse(data) });
 
 const dbTags = {
   UserDetails: 'UserDetails',
@@ -39,10 +42,37 @@ export const dbApi = createApi({
             .catch(formatError),
       },
     ),
+
+    getSensorData: builder.query<SensorData[], void>({
+      keepUnusedDataFor: 0,
+      queryFn: () => ({ data: [] }),
+      onCacheEntryAdded: async (
+        _,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
+      ) => {
+        let unsubscribe: Unsubscribe | undefined;
+        try {
+          await cacheDataLoaded;
+          const listener = (data: SensorData) => {
+            updateCachedData((draft) => {
+              draft.push(data);
+            });
+          };
+          unsubscribe = DbService.getInstance().getSensorData(listener);
+          // eslint-disable-next-line no-empty
+        } catch {}
+        await cacheEntryRemoved;
+        unsubscribe?.();
+      },
+    }),
   }),
 });
 
-export const { useGetUserDetailsQuery, useSetUserDetailsMutation } = dbApi;
+export const {
+  useGetUserDetailsQuery,
+  useSetUserDetailsMutation,
+  useGetSensorDataQuery,
+} = dbApi;
 
 export const useLazyGetUserDetailsQuerySubscription =
   dbApi.endpoints.getUserDetails.useLazyQuerySubscription;

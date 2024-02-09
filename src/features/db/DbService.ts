@@ -1,4 +1,4 @@
-import type { DocumentData } from 'firebase/firestore';
+import type { DocumentData, Timestamp } from 'firebase/firestore';
 import {
   getFirestore,
   collection,
@@ -11,6 +11,10 @@ import {
   QuerySnapshot,
   Firestore,
   setDoc,
+  orderBy,
+  limit,
+  onSnapshot,
+  addDoc,
 } from 'firebase/firestore';
 import { complement, not } from 'ramda';
 
@@ -27,6 +31,18 @@ export type GetUserDetailsResponse = User | undefined;
 export type GetUserDetailsArg = string;
 export type SetUserDetailsArg = Partial<User> & { uid: string };
 export type SetUserDetailsResponse = void;
+
+export type SensorData = {
+  arduino: number;
+  date: number;
+  co2: number;
+  humidity: number;
+  temperature: number;
+};
+type SensorDataWithDate = Omit<SensorData, 'date'> & { date: Date };
+type SensorDataWithTimestamp = Omit<SensorData, 'date'> & {
+  date: Timestamp;
+};
 
 type RootCollection = 'users' | 'settings' | 'sensors';
 type FirestorePath = `${RootCollection}` | `${RootCollection}/${string}`;
@@ -92,4 +108,38 @@ export class DbService {
     const userDocRef = this.#getDocRef(`users/${uid}`);
     return setDoc(userDocRef, details);
   };
+
+  /**
+   * Get sensor data from Firestore.
+   * @param listener - The callback to call when new sensor data is available.
+   * @returns - The unsubscribe function.
+   */
+  public getSensorData(listener: (snapshot: SensorData) => void) {
+    const q = query(
+      this.#getCollRef('sensors'),
+      orderBy('date', 'desc'),
+      limit(10),
+    );
+
+    return onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === 'added') {
+          const data = change.doc.data() as SensorDataWithTimestamp;
+          // Convert date to milliseconds
+          const date = data.date.seconds * 1000;
+          listener({ ...data, date });
+        }
+      });
+    });
+  }
+
+  /**
+   * Add sensor data to Firestore.
+   * @param {SensorDataWithDate} data - The sensor data to add.
+   * @returns - A promise that resolves when the data is added.
+   */
+  addSensorData(data: SensorDataWithDate) {
+    const collRef = this.#getCollRef('sensors');
+    return addDoc(collRef, data);
+  }
 }
