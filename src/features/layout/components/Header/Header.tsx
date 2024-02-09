@@ -4,17 +4,22 @@ import { IconGlassFullFilled, IconLogout, IconUser } from '@tabler/icons-react';
 import styles from './Header.module.css';
 
 import { ActionTooltip } from 'components/ActionTooltip';
+import { useLogoutMutation } from 'features/auth/authApi';
+import { useIsAuthenticated } from 'features/auth/hooks/useIsAuthenticated';
 import { useSidebar } from 'features/layout/hooks/useSidebar';
 
 export const Header = () => {
   const [isOpen, toggleSidebar] = useSidebar();
+  const [logout] = useLogoutMutation();
 
-  // TODO: Check if the user is logged in
-  const userLoggedIn = true;
+  const userLoggedIn = useIsAuthenticated();
 
-  // TODO: Add logout functionality
-  const handleLogout = () => {
-    throw new Error('Not implemented');
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   return (

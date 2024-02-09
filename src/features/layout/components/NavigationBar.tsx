@@ -7,6 +7,7 @@ import {
   NavLink,
   Avatar,
 } from '@mantine/core';
+import { skipToken } from '@reduxjs/toolkit/query';
 import {
   IconSun,
   IconMoon,
@@ -17,6 +18,9 @@ import { juxt } from 'ramda';
 import { useNavigate } from 'react-router-dom';
 
 import { ActionTooltip } from 'components/ActionTooltip';
+import { useAuthService } from 'features/auth/hooks/useAuthService';
+import { useIsAuthenticated } from 'features/auth/hooks/useIsAuthenticated';
+import { useGetUserDetailsQuery } from 'features/db/dbApi';
 import { useSidebarDispatch } from 'features/layout/hooks/useSidebarDispatch';
 import { useIsMobileView } from 'hooks/useIsMobileView';
 
@@ -29,23 +33,30 @@ export const NavigationBar = () => {
   const goHome = () => navigate('/home');
   const goSettings = () => navigate('/settings');
 
-  // TODO: Replace with the actual user data
-  const userInitials = 'JD';
+  const { userUid } = useAuthService();
+  const { data: userDetails } = useGetUserDetailsQuery(userUid ?? skipToken);
+  const userLoggedIn = useIsAuthenticated();
+
+  const userInitials =
+    userDetails?.name && userDetails?.lastname
+      ? `${userDetails.name.charAt(0).toUpperCase()}${userDetails.lastname.charAt(0).toUpperCase()}`
+      : '';
 
   return (
     <>
-      <AppShell.Section>
-        {isMobile ? (
-          <Stack py="md" align="left" pl="sm">
-            <Avatar tt="uppercase">{userInitials}</Avatar>
-          </Stack>
-        ) : (
-          <Stack py="md" align="center">
-            <Avatar tt="uppercase">{userInitials}</Avatar>
-          </Stack>
-        )}
-      </AppShell.Section>
-
+      {userLoggedIn && (
+        <AppShell.Section>
+          {isMobile ? (
+            <Stack py="md" align="left" pl="sm">
+              <Avatar tt="uppercase">{userInitials}</Avatar>
+            </Stack>
+          ) : (
+            <Stack py="md" align="center">
+              <Avatar tt="uppercase">{userInitials}</Avatar>
+            </Stack>
+          )}
+        </AppShell.Section>
+      )}
       <Divider />
 
       <AppShell.Section>
@@ -55,12 +66,18 @@ export const NavigationBar = () => {
               <NavLink
                 label="Home"
                 leftSection={<IconHome2 />}
-                onClick={juxt([toggleSidebar, goHome])}
+                onClick={
+                  userLoggedIn ? juxt([toggleSidebar, goHome]) : undefined
+                }
+                style={!userLoggedIn ? { color: 'gray' } : undefined}
               />
               <NavLink
                 label="Settings"
                 leftSection={<IconSettings />}
-                onClick={juxt([toggleSidebar, goSettings])}
+                onClick={
+                  userLoggedIn ? juxt([toggleSidebar, goSettings]) : undefined
+                }
+                style={!userLoggedIn ? { color: 'gray' } : undefined}
               />
               <NavLink
                 label={`Switch to ${colorScheme === 'dark' ? 'light' : 'dark'} mode`}
@@ -78,6 +95,7 @@ export const NavigationBar = () => {
                   radius="md"
                   variant="filled"
                   onClick={goHome}
+                  disabled={!userLoggedIn}
                 >
                   <IconHome2 />
                 </ActionIcon>
@@ -88,6 +106,7 @@ export const NavigationBar = () => {
                   radius="md"
                   variant="filled"
                   onClick={goSettings}
+                  disabled={!userLoggedIn}
                 >
                   <IconSettings />
                 </ActionIcon>
