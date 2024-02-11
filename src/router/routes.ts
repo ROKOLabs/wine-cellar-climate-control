@@ -1,5 +1,6 @@
 import { createBrowserRouter, redirect } from 'react-router-dom';
 
+import { RouteTransition } from 'components/RouteTransition/RouteTransition';
 import { Settings } from 'features/Settings/Settings';
 import { AuthGuard } from 'features/auth/components/AuthGuard';
 import { Login } from 'features/auth/pages/login/Login';
@@ -24,20 +25,25 @@ export const router = createBrowserRouter([
         Component: Layout,
         children: [
           {
-            loader: protectedLoader,
+            Component: RouteTransition,
             children: [
-              // Protected routes
-              { index: true, loader: () => redirect(routes.login) },
-              { path: routes.dashboard, Component: Dashboard },
-              { path: routes.settings, Component: Settings },
-            ],
-          },
-          {
-            loader: publicLoader,
-            children: [
-              // Public routes
-              { path: routes.login, Component: Login },
-              { path: routes.register, Component: Register },
+              {
+                loader: protectedLoader,
+                children: [
+                  // Protected routes
+                  { index: true, loader: () => redirect(routes.login) },
+                  { path: routes.dashboard, Component: Dashboard },
+                  { path: routes.settings, Component: Settings },
+                ],
+              },
+              {
+                loader: publicLoader,
+                children: [
+                  // Public routes
+                  { path: routes.login, Component: Login },
+                  { path: routes.register, Component: Register },
+                ],
+              },
             ],
           },
         ],
