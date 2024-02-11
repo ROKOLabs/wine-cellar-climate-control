@@ -3,10 +3,11 @@ import { Paper, TextInput, PasswordInput, Button } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { FirebaseError } from 'firebase/app';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { useLoginMutation } from 'features/auth/authApi';
 import { LoginSchema } from 'features/auth/pages/config';
-import { navigate } from 'router/utility/navigate';
+import { routes } from 'router/routes';
 
 interface ILoginForm {
   email: string;
@@ -14,6 +15,8 @@ interface ILoginForm {
 }
 
 export const LoginForm = () => {
+  const navigate = useNavigate();
+
   const [login, { isLoading }] = useLoginMutation();
 
   const {
@@ -32,7 +35,7 @@ export const LoginForm = () => {
     try {
       notifications.clean();
       await login({ email, password }).unwrap();
-      navigate('/');
+      navigate(routes.dashboard);
     } catch (error) {
       handleErrors(error);
     }

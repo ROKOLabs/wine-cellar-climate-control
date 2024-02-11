@@ -1,11 +1,14 @@
 import { Stack, Title, Anchor, Text } from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
 
 import { RegisterForm } from 'features/auth/pages/register/RegisterForm';
-import { navigate } from 'router/utility/navigate';
+import { routes } from 'router/routes';
 
 export const Register = () => {
+  const navigate = useNavigate();
+
   const navigateToLogin = () => {
-    navigate('/login');
+    navigate(routes.login);
   };
 
   return (

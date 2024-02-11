@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { ActionTooltip } from 'components/ActionTooltip';
 import { useSidebarDispatch } from 'features/layout/hooks/useSidebarDispatch';
 import { useIsMobileView } from 'hooks/useIsMobileView';
+import { routes } from 'router/routes';
 
 export const NavigationBar = () => {
   const navigate = useNavigate();
@@ -26,8 +27,8 @@ export const NavigationBar = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const isMobile = useIsMobileView();
 
-  const goHome = () => navigate('/home');
-  const goSettings = () => navigate('/settings');
+  const goDashboard = () => navigate(routes.dashboard);
+  const goSettings = () => navigate(routes.settings);
 
   // TODO: Replace with the actual user data
   const userInitials = 'JD';
@@ -55,7 +56,7 @@ export const NavigationBar = () => {
               <NavLink
                 label="Home"
                 leftSection={<IconHome2 />}
-                onClick={juxt([toggleSidebar, goHome])}
+                onClick={juxt([toggleSidebar, goDashboard])}
               />
               <NavLink
                 label="Settings"
@@ -77,7 +78,7 @@ export const NavigationBar = () => {
                   size="xl"
                   radius="md"
                   variant="filled"
-                  onClick={goHome}
+                  onClick={goDashboard}
                 >
                   <IconHome2 />
                 </ActionIcon>

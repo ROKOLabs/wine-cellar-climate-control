@@ -4,32 +4,15 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  updateProfile,
 } from 'firebase/auth';
-import type { User, NextOrObserver } from 'firebase/auth';
+import type { User } from 'firebase/auth';
 
-import { assertUserLoggedIn } from 'features/auth/assertions/assertUserLoggedIn';
 import { app } from 'firebase/firebase';
 
 export class AuthService {
   static #instance: AuthService;
   #auth;
-
-  get user() {
-    return this.#auth.currentUser;
-  }
-
-  get isUserLoggedIn() {
-    return Boolean(this.#auth.currentUser);
-  }
-
-  get userUid() {
-    return this.#auth.currentUser?.uid;
-  }
-
-  private constructor(appInstance: typeof app) {
-    this.#auth = getAuth(appInstance);
-  }
+  #initialized: boolean;
 
   public static getInstance(appInstance: typeof app = app) {
     if (!AuthService.#instance)
@@ -37,19 +20,53 @@ export class AuthService {
     return AuthService.#instance;
   }
 
-  register = ({ email, password }: { email: string; password: string }) =>
-    createUserWithEmailAndPassword(this.#auth, email, password);
+  get initialized() {
+    return this.#initialized;
+  }
 
-  login = ({ email, password }: { email: string; password: string }) =>
-    signInWithEmailAndPassword(this.#auth, email, password);
+  get authenticated() {
+    return Boolean(this.#auth.currentUser);
+  }
 
-  logout = () => signOut(this.#auth);
+  get currentUser() {
+    return this.#auth.currentUser;
+  }
 
-  onAuthStateChanged = (callback: NextOrObserver<User>) =>
-    onAuthStateChanged(this.#auth, callback);
+  get currentUserUid() {
+    return this.#auth.currentUser?.uid;
+  }
 
-  updateUserProfile = async (details: Partial<User>) => {
-    assertUserLoggedIn(this.user);
-    await updateProfile(this.user, details);
+  private constructor(appInstance: typeof app) {
+    this.#initialized = false;
+    this.#auth = getAuth(appInstance);
+  }
+
+  initialize = () => {
+    // return promise that resolve when auth is initialized
+    return new Promise<boolean>((resolve) => {
+      // if already initialized, resolve immediately
+      if (this.#initialized) return resolve(true);
+      const unsubscribe = this.onAuthStateChanged(() => {
+        this.#initialized = true;
+        unsubscribe();
+        resolve(this.#initialized);
+      });
+    });
+  };
+
+  onAuthStateChanged = (handler: (user: User | null) => void) => {
+    return onAuthStateChanged(this.#auth, handler);
+  };
+
+  register = ({ email, password }: { email: string; password: string }) => {
+    return createUserWithEmailAndPassword(this.#auth, email, password);
+  };
+
+  login = ({ email, password }: { email: string; password: string }) => {
+    return signInWithEmailAndPassword(this.#auth, email, password);
+  };
+
+  logout = () => {
+    return signOut(this.#auth);
   };
 }

@@ -53,12 +53,15 @@ export const dbApi = createApi({
         let unsubscribe: Unsubscribe | undefined;
         try {
           await cacheDataLoaded;
-          const listener = (data: SensorData) => {
-            updateCachedData((draft) => {
-              draft.push(data);
-            });
-          };
-          unsubscribe = DbService.getInstance().getSensorData(listener);
+
+          unsubscribe = DbService.getInstance().getSensorData(
+            (data: SensorData) => {
+              updateCachedData((draft) => {
+                draft.push(data);
+              });
+            },
+          );
+
           // eslint-disable-next-line no-empty
         } catch {}
         await cacheEntryRemoved;

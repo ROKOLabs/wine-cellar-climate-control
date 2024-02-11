@@ -1,5 +1,5 @@
 import { RouterProvider } from 'react-router-dom';
 
-import { browserRouter } from './browserRouter';
+import { router } from 'router/routes';
 
-export const Router = () => <RouterProvider router={browserRouter} />;
+export const Router = () => <RouterProvider router={router} />;
