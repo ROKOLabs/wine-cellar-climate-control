@@ -64,15 +64,8 @@ export const LoginForm = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      style={{
-        width: '520px',
-        maxWidth: '100%',
-        margin: '50px auto 0 auto',
-      }}
-    >
-      <Paper withBorder shadow="md" p="xl" radius="md">
+    <Paper withBorder shadow="md" p="xl" radius="md" maw={520} w="100%">
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
           name="email"
           control={control}
@@ -103,7 +96,7 @@ export const LoginForm = () => {
         <Button type="submit" fullWidth mt="xl" loading={isLoading}>
           Login
         </Button>
-      </Paper>
-    </form>
+      </form>
+    </Paper>
   );
 };

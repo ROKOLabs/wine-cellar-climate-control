@@ -12,7 +12,7 @@ export const Register = () => {
   };
 
   return (
-    <Stack h="100%" justify="center">
+    <Stack h="100%" justify="center" align="center">
       <Title ta="center">Wine Cellar Climate Control</Title>
 
       <Text ta="center" size="sm" c="dimmed" mt="xs">
