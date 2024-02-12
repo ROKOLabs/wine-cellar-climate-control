@@ -1,4 +1,5 @@
 import { ActionIcon, Burger, Group, Title } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import { IconGlassFullFilled, IconLogout, IconUser } from '@tabler/icons-react';
 
 import styles from './Header.module.css';
@@ -18,7 +19,13 @@ export const Header = () => {
     try {
       await logout();
     } catch (error) {
-      console.error('Logout error:', error);
+      notifications.show({
+        title: 'Logout Error',
+        message: 'An error occurred while logging out. Please try again later.',
+        color: 'red',
+        withBorder: true,
+        withCloseButton: true,
+      });
     }
   };
 

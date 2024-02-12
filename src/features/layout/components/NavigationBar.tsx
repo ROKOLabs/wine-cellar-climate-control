@@ -22,6 +22,7 @@ import { useAuth } from 'features/auth/hooks/useAuth';
 import { useIsAuthenticated } from 'features/auth/hooks/useIsAuthenticated';
 import { useGetUserDetailsQuery } from 'features/db/dbApi';
 import { useSidebarDispatch } from 'features/layout/hooks/useSidebarDispatch';
+import { getUserInitials } from 'features/layout/utils/getUserInitials';
 import { useIsMobileView } from 'hooks/useIsMobileView';
 import { routes } from 'router/routes';
 
@@ -35,29 +36,26 @@ export const NavigationBar = () => {
   const goSettings = () => navigate(routes.settings);
 
   const { currentUserUid: userUid } = useAuth();
-  const { data: userDetails } = useGetUserDetailsQuery(userUid ?? skipToken);
-  const userLoggedIn = useIsAuthenticated();
+  const { currentData: userDetails } = useGetUserDetailsQuery(
+    userUid ?? skipToken,
+  );
 
-  const userInitials =
-    userDetails?.name && userDetails?.lastname
-      ? `${userDetails.name.charAt(0).toUpperCase()}${userDetails.lastname.charAt(0).toUpperCase()}`
-      : '';
+  const userLoggedIn = useIsAuthenticated();
+  const userInitials = getUserInitials(userDetails);
 
   return (
     <>
-      {userLoggedIn && (
-        <AppShell.Section>
-          {isMobile ? (
-            <Stack py="md" align="left" pl="sm">
-              <Avatar tt="uppercase">{userInitials}</Avatar>
-            </Stack>
-          ) : (
-            <Stack py="md" align="center">
-              <Avatar tt="uppercase">{userInitials}</Avatar>
-            </Stack>
-          )}
-        </AppShell.Section>
-      )}
+      <AppShell.Section>
+        {isMobile ? (
+          <Stack py="md" align="left" pl="sm">
+            <Avatar tt="uppercase">{userInitials}</Avatar>
+          </Stack>
+        ) : (
+          <Stack py="md" align="center">
+            <Avatar tt="uppercase">{userInitials}</Avatar>
+          </Stack>
+        )}
+      </AppShell.Section>
       <Divider />
 
       <AppShell.Section>
