@@ -5,15 +5,13 @@ import { IconGlassFullFilled, IconLogout, IconUser } from '@tabler/icons-react';
 import styles from './Header.module.css';
 
 import { ActionTooltip } from 'components/ActionTooltip';
-import { useLogoutMutation } from 'features/auth/authApi';
-import { useIsAuthenticated } from 'features/auth/hooks/useIsAuthenticated';
+import { useGetAuthStateQuery, useLogoutMutation } from 'features/auth/authApi';
 import { useSidebar } from 'features/layout/hooks/useSidebar';
 
 export const Header = () => {
   const [isOpen, toggleSidebar] = useSidebar();
   const [logout] = useLogoutMutation();
-
-  const userLoggedIn = useIsAuthenticated();
+  const { currentData: userLoggedIn } = useGetAuthStateQuery();
 
   const handleLogout = async () => {
     try {

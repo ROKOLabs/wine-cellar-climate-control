@@ -18,8 +18,8 @@ import { juxt } from 'ramda';
 import { useNavigate } from 'react-router-dom';
 
 import { ActionTooltip } from 'components/ActionTooltip';
+import { useGetAuthStateQuery } from 'features/auth/authApi';
 import { useAuth } from 'features/auth/hooks/useAuth';
-import { useIsAuthenticated } from 'features/auth/hooks/useIsAuthenticated';
 import { useGetUserDetailsQuery } from 'features/db/dbApi';
 import { useSidebarDispatch } from 'features/layout/hooks/useSidebarDispatch';
 import { getUserInitials } from 'features/layout/utils/getUserInitials';
@@ -40,7 +40,7 @@ export const NavigationBar = () => {
     userUid ?? skipToken,
   );
 
-  const userLoggedIn = useIsAuthenticated();
+  const { currentData: userLoggedIn } = useGetAuthStateQuery();
   const userInitials = getUserInitials(userDetails);
 
   return (
