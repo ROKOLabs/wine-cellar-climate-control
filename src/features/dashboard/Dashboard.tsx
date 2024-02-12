@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 import { DevTools } from 'components/DevTools';
 import { useAuth } from 'features/auth/hooks/useAuth';
+import { TemperatureDataDisplay } from 'features/dashboard/components/TemperatureDataDisplay/TemperatureDataDisplay';
 import {
   useGetSensorDataQuery,
   useGetUserDetailsQuery,
@@ -26,6 +27,7 @@ export const Dashboard = () => {
     <Stack>
       <Title>Dashboard Page</Title>
       <DevTools />
+      <TemperatureDataDisplay />
     </Stack>
   );
 };
