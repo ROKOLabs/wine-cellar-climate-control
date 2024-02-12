@@ -18,11 +18,12 @@ import { juxt } from 'ramda';
 import { useNavigate } from 'react-router-dom';
 
 import { ActionTooltip } from 'components/ActionTooltip';
-import { useAuthService } from 'features/auth/hooks/useAuthService';
+import { useAuth } from 'features/auth/hooks/useAuth';
 import { useIsAuthenticated } from 'features/auth/hooks/useIsAuthenticated';
 import { useGetUserDetailsQuery } from 'features/db/dbApi';
 import { useSidebarDispatch } from 'features/layout/hooks/useSidebarDispatch';
 import { useIsMobileView } from 'hooks/useIsMobileView';
+import { routes } from 'router/routes';
 
 export const NavigationBar = () => {
   const navigate = useNavigate();
@@ -30,10 +31,10 @@ export const NavigationBar = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const isMobile = useIsMobileView();
 
-  const goHome = () => navigate('/home');
-  const goSettings = () => navigate('/settings');
+  const goDashboard = () => navigate(routes.dashboard);
+  const goSettings = () => navigate(routes.settings);
 
-  const { userUid } = useAuthService();
+  const { currentUserUid: userUid } = useAuth();
   const { data: userDetails } = useGetUserDetailsQuery(userUid ?? skipToken);
   const userLoggedIn = useIsAuthenticated();
 
@@ -67,7 +68,7 @@ export const NavigationBar = () => {
                 label="Home"
                 leftSection={<IconHome2 />}
                 onClick={
-                  userLoggedIn ? juxt([toggleSidebar, goHome]) : undefined
+                  userLoggedIn ? juxt([toggleSidebar, goDashboard]) : undefined
                 }
                 style={!userLoggedIn ? { color: 'gray' } : undefined}
               />
@@ -94,7 +95,7 @@ export const NavigationBar = () => {
                   size="xl"
                   radius="md"
                   variant="filled"
-                  onClick={goHome}
+                  onClick={goDashboard}
                   disabled={!userLoggedIn}
                 >
                   <IconHome2 />
