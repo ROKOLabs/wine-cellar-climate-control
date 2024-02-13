@@ -1,20 +1,30 @@
 import { ActionIcon, Burger, Group, Title } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import { IconGlassFullFilled, IconLogout, IconUser } from '@tabler/icons-react';
 
 import styles from './Header.module.css';
 
 import { ActionTooltip } from 'components/ActionTooltip';
+import { useGetAuthStateQuery, useLogoutMutation } from 'features/auth/authApi';
 import { useSidebar } from 'features/layout/hooks/useSidebar';
 
 export const Header = () => {
   const [isOpen, toggleSidebar] = useSidebar();
+  const [logout] = useLogoutMutation();
+  const { data: userLoggedIn } = useGetAuthStateQuery();
 
-  // TODO: Check if the user is logged in
-  const userLoggedIn = true;
-
-  // TODO: Add logout functionality
-  const handleLogout = () => {
-    throw new Error('Not implemented');
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      notifications.show({
+        title: 'Logout Error',
+        message: 'An error occurred while logging out. Please try again later.',
+        color: 'red',
+        withBorder: true,
+        withCloseButton: true,
+      });
+    }
   };
 
   return (
