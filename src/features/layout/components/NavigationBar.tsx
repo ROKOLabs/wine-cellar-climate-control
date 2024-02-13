@@ -7,6 +7,7 @@ import {
   NavLink,
   Avatar,
 } from '@mantine/core';
+import { skipToken } from '@reduxjs/toolkit/query';
 import {
   IconSun,
   IconMoon,
@@ -17,8 +18,13 @@ import { juxt } from 'ramda';
 import { useNavigate } from 'react-router-dom';
 
 import { ActionTooltip } from 'components/ActionTooltip';
+import { useGetAuthStateQuery } from 'features/auth/authApi';
+import { useAuth } from 'features/auth/hooks/useAuth';
+import { useGetUserDetailsQuery } from 'features/db/dbApi';
 import { useSidebarDispatch } from 'features/layout/hooks/useSidebarDispatch';
+import { getUserInitials } from 'features/layout/utils/getUserInitials';
 import { useIsMobileView } from 'hooks/useIsMobileView';
+import { routes } from 'router/routes';
 
 export const NavigationBar = () => {
   const navigate = useNavigate();
@@ -26,11 +32,16 @@ export const NavigationBar = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const isMobile = useIsMobileView();
 
-  const goHome = () => navigate('/home');
-  const goSettings = () => navigate('/settings');
+  const goDashboard = () => navigate(routes.dashboard);
+  const goSettings = () => navigate(routes.settings);
 
-  // TODO: Replace with the actual user data
-  const userInitials = 'JD';
+  const { currentUserUid: userUid } = useAuth();
+  const { currentData: userDetails } = useGetUserDetailsQuery(
+    userUid ?? skipToken,
+  );
+
+  const { data: userLoggedIn } = useGetAuthStateQuery();
+  const userInitials = getUserInitials(userDetails);
 
   return (
     <>
@@ -45,7 +56,6 @@ export const NavigationBar = () => {
           </Stack>
         )}
       </AppShell.Section>
-
       <Divider />
 
       <AppShell.Section>
@@ -55,12 +65,14 @@ export const NavigationBar = () => {
               <NavLink
                 label="Home"
                 leftSection={<IconHome2 />}
-                onClick={juxt([toggleSidebar, goHome])}
+                onClick={juxt([toggleSidebar, goDashboard])}
+                disabled={!userLoggedIn}
               />
               <NavLink
                 label="Settings"
                 leftSection={<IconSettings />}
                 onClick={juxt([toggleSidebar, goSettings])}
+                disabled={!userLoggedIn}
               />
               <NavLink
                 label={`Switch to ${colorScheme === 'dark' ? 'light' : 'dark'} mode`}
@@ -77,7 +89,8 @@ export const NavigationBar = () => {
                   size="xl"
                   radius="md"
                   variant="filled"
-                  onClick={goHome}
+                  onClick={goDashboard}
+                  disabled={!userLoggedIn}
                 >
                   <IconHome2 />
                 </ActionIcon>
@@ -88,6 +101,7 @@ export const NavigationBar = () => {
                   radius="md"
                   variant="filled"
                   onClick={goSettings}
+                  disabled={!userLoggedIn}
                 >
                   <IconSettings />
                 </ActionIcon>

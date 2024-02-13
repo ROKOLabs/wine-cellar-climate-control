@@ -1,4 +1,5 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { Unsubscribe, User } from 'firebase/auth';
 
 import { AuthService } from 'features/auth/AuthService';
 import { ExtractPromise } from 'types';
@@ -50,8 +51,34 @@ export const authApi = createApi({
           .then(formatData)
           .catch(formatError),
     }),
+
+    getAuthState: builder.query<User | null, void>({
+      keepUnusedDataFor: 0,
+      queryFn: () => ({ data: null }),
+      onCacheEntryAdded: async (
+        _,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
+      ) => {
+        let unsubscribe: Unsubscribe | undefined;
+        try {
+          await cacheDataLoaded;
+
+          unsubscribe = AuthService.getInstance().onAuthStateChanged((user) => {
+            updateCachedData(() => jsonSafeParse(user));
+          });
+
+          // eslint-disable-next-line no-empty
+        } catch {}
+        await cacheEntryRemoved;
+        unsubscribe?.();
+      },
+    }),
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation, useLogoutMutation } =
-  authApi;
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useLogoutMutation,
+  useGetAuthStateQuery,
+} = authApi;
