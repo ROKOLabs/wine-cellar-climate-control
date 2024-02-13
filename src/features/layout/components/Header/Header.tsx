@@ -11,7 +11,7 @@ import { useSidebar } from 'features/layout/hooks/useSidebar';
 export const Header = () => {
   const [isOpen, toggleSidebar] = useSidebar();
   const [logout] = useLogoutMutation();
-  const { currentData: userLoggedIn } = useGetAuthStateQuery();
+  const { data: userLoggedIn } = useGetAuthStateQuery();
 
   const handleLogout = async () => {
     try {

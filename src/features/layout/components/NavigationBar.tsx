@@ -40,7 +40,7 @@ export const NavigationBar = () => {
     userUid ?? skipToken,
   );
 
-  const { currentData: userLoggedIn } = useGetAuthStateQuery();
+  const { data: userLoggedIn } = useGetAuthStateQuery();
   const userInitials = getUserInitials(userDetails);
 
   return (
@@ -65,18 +65,14 @@ export const NavigationBar = () => {
               <NavLink
                 label="Home"
                 leftSection={<IconHome2 />}
-                onClick={
-                  userLoggedIn ? juxt([toggleSidebar, goDashboard]) : undefined
-                }
-                style={!userLoggedIn ? { color: 'gray' } : undefined}
+                onClick={juxt([toggleSidebar, goDashboard])}
+                disabled={!userLoggedIn}
               />
               <NavLink
                 label="Settings"
                 leftSection={<IconSettings />}
-                onClick={
-                  userLoggedIn ? juxt([toggleSidebar, goSettings]) : undefined
-                }
-                style={!userLoggedIn ? { color: 'gray' } : undefined}
+                onClick={juxt([toggleSidebar, goSettings])}
+                disabled={!userLoggedIn}
               />
               <NavLink
                 label={`Switch to ${colorScheme === 'dark' ? 'light' : 'dark'} mode`}
