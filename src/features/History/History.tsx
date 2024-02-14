@@ -1,9 +1,9 @@
 import { Container, Title } from '@mantine/core';
 
-export const Settings = () => {
+export const History = () => {
   return (
     <Container size="xl">
-      <Title>Settings Page</Title>
+      <Title>History Page</Title>
     </Container>
   );
 };

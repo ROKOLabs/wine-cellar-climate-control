@@ -1,6 +1,7 @@
 import { createBrowserRouter, redirect } from 'react-router-dom';
 
 import { RouteTransition } from 'components/RouteTransition/RouteTransition';
+import { History } from 'features/History/History';
 import { Settings } from 'features/Settings/Settings';
 import { AuthGuard } from 'features/auth/components/AuthGuard';
 import { Login } from 'features/auth/pages/login/Login';
@@ -15,6 +16,7 @@ export const routes = {
   register: '/register',
   dashboard: '/dashboard',
   settings: '/settings',
+  history: '/history',
 };
 
 export const router = createBrowserRouter([
@@ -34,6 +36,7 @@ export const router = createBrowserRouter([
                   { index: true, loader: () => redirect(routes.login) },
                   { path: routes.dashboard, Component: Dashboard },
                   { path: routes.settings, Component: Settings },
+                  { path: routes.history, Component: History },
                 ],
               },
               {

@@ -1,7 +1,7 @@
 import { AppShell } from '@mantine/core';
 import { Outlet } from 'react-router-dom';
 
-import { NavigationBar } from './components/NavigationBar';
+import { NavigationBar } from './components/NavigationBar/NavigationBar';
 
 import { AppShellRoot } from 'features/layout/components/AppShellRoot/AppShellRoot';
 import { Header } from 'features/layout/components/Header/Header';

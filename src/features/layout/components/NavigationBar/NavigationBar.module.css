@@ -1,0 +1,12 @@
+.actionIcon {
+  transition:
+    background-color 0.2s ease-out,
+    color 0.2s ease-out;
+
+  &:global(.active) {
+    --ai-color: var(--mantine-color-white) !important;
+    --ai-bg: var(--mantine-color-blue-filled) !important;
+    --ai-hover: var(--mantine-color-blue-filled-hover) !important;
+    border-color: transparent;
+  }
+}

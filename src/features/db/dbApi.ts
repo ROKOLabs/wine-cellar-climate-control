@@ -6,6 +6,7 @@ import {
   GetUserDetailsArg,
   GetUserDetailsResponse,
   SensorData,
+  SensorDataWithDate,
   SetUserDetailsArg,
   SetUserDetailsResponse,
 } from 'features/db/DbService';
@@ -43,6 +44,14 @@ export const dbApi = createApi({
       },
     ),
 
+    addSensorData: builder.mutation<SensorData, SensorDataWithDate>({
+      queryFn: (data) =>
+        DbService.getInstance()
+          .addSensorData(data)
+          .then(formatData)
+          .catch(formatError),
+    }),
+
     getSensorData: builder.query<SensorData[], void>({
       keepUnusedDataFor: 0,
       queryFn: () => ({ data: [] }),
@@ -74,6 +83,7 @@ export const dbApi = createApi({
 export const {
   useGetUserDetailsQuery,
   useSetUserDetailsMutation,
+  useAddSensorDataMutation,
   useGetSensorDataQuery,
 } = dbApi;
 

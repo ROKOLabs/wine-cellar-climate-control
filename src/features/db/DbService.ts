@@ -39,7 +39,7 @@ export type SensorData = {
   humidity: number;
   temperature: number;
 };
-type SensorDataWithDate = Omit<SensorData, 'date'> & { date: Date };
+export type SensorDataWithDate = Omit<SensorData, 'date'> & { date: Date };
 type SensorDataWithTimestamp = Omit<SensorData, 'date'> & {
   date: Timestamp;
 };
