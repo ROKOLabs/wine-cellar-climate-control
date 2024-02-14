@@ -1,4 +1,4 @@
-import { Stack, Title } from '@mantine/core';
+import { Container, Paper, Stack } from '@mantine/core';
 import { skipToken } from '@reduxjs/toolkit/query';
 import { useEffect } from 'react';
 
@@ -26,12 +26,19 @@ export const Dashboard = () => {
   }, [userDetails]);
 
   return (
-    <Stack>
-      <Title>Dashboard Page</Title>
-      <DevTools />
-      <TemperatureDataDisplay />
-      <HumidityDataDisplay />
-      <CO2DataDisplay />
-    </Stack>
+    <Container size="xl">
+      <Stack gap="xl">
+        {process.env.NODE_ENV !== 'production' ? <DevTools /> : null}
+        <Paper withBorder shadow="md" p="xl" radius="md">
+          <TemperatureDataDisplay />
+        </Paper>
+        <Paper withBorder shadow="md" p="xl" radius="md">
+          <HumidityDataDisplay />
+        </Paper>
+        <Paper withBorder shadow="md" p="xl" radius="md">
+          <CO2DataDisplay />
+        </Paper>
+      </Stack>
+    </Container>
   );
 };
