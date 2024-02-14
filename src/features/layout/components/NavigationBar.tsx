@@ -6,6 +6,7 @@ import {
   Avatar,
   ActionIcon,
 } from '@mantine/core';
+import { skipToken } from '@reduxjs/toolkit/query';
 import {
   IconSun,
   IconMoon,
@@ -16,7 +17,11 @@ import { useLocation } from 'react-router-dom';
 
 import { ActionTooltip } from 'components/ActionTooltip';
 import { StyledNavLink } from 'components/StyledNavLink';
+import { useGetAuthStateQuery } from 'features/auth/authApi';
+import { useAuth } from 'features/auth/hooks/useAuth';
+import { useGetUserDetailsQuery } from 'features/db/dbApi';
 import { useSidebarDispatch } from 'features/layout/hooks/useSidebarDispatch';
+import { getUserInitials } from 'features/layout/utils/getUserInitials';
 import { useIsMobileView } from 'hooks/useIsMobileView';
 import { routes } from 'router/routes';
 
@@ -24,24 +29,31 @@ export const NavigationBar = () => {
   const toggleSidebar = useSidebarDispatch();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const isMobile = useIsMobileView();
-  const location = useLocation();
 
+  const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
+
+  const { currentUserUid: userUid } = useAuth();
+  const { currentData: userDetails } = useGetUserDetailsQuery(
+    userUid ?? skipToken,
+  );
+
+  const { data: userLoggedIn } = useGetAuthStateQuery();
+  const userInitials = getUserInitials(userDetails);
 
   return (
     <>
       <AppShell.Section>
         {isMobile ? (
           <Stack py="md" align="left" pl="sm">
-            <Avatar tt="uppercase">JD</Avatar>
+            <Avatar tt="uppercase">{userInitials}</Avatar>
           </Stack>
         ) : (
           <Stack py="md" align="center">
-            <Avatar tt="uppercase">JD</Avatar>
+            <Avatar tt="uppercase">{userInitials}</Avatar>
           </Stack>
         )}
       </AppShell.Section>
-
       <Divider />
 
       <AppShell.Section>
@@ -53,6 +65,7 @@ export const NavigationBar = () => {
                 isActive={isActive(routes.dashboard)}
                 colorScheme={colorScheme}
                 onClick={toggleSidebar}
+                disabled={!userLoggedIn}
               >
                 <IconHome2 style={{ marginRight: '16px' }} />
                 Home
@@ -62,6 +75,7 @@ export const NavigationBar = () => {
                 isActive={isActive(routes.settings)}
                 colorScheme={colorScheme}
                 onClick={toggleSidebar}
+                disabled={!userLoggedIn}
               >
                 <IconSettings style={{ marginRight: '16px' }} />
                 Settings
@@ -76,7 +90,8 @@ export const NavigationBar = () => {
                 style={{
                   justifyContent: 'center',
                 }}
-                // tooltipLabel="Home"
+                disabled={!userLoggedIn}
+                tooltipLabel="Home"
               >
                 <IconHome2 />
               </StyledNavLink>
@@ -87,7 +102,8 @@ export const NavigationBar = () => {
                 style={{
                   justifyContent: 'center',
                 }}
-                // tooltipLabel="Settings"
+                disabled={!userLoggedIn}
+                tooltipLabel="Settings"
               >
                 <IconSettings />
               </StyledNavLink>

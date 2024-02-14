@@ -12,12 +12,19 @@ interface StyledNavLinkProps {
   style?: React.CSSProperties;
   onClick?: () => void;
   tooltipLabel?: string;
+  disabled?: boolean;
 }
 
-export const StyledNavLink: React.FC<StyledNavLinkProps> = (
-  { to, isActive, colorScheme, children, style, tooltipLabel, ...rest },
-  ref,
-) => {
+export const StyledNavLink: React.FC<StyledNavLinkProps> = ({
+  to,
+  isActive,
+  colorScheme,
+  children,
+  style,
+  tooltipLabel,
+  disabled = false,
+  ...rest
+}) => {
   const activeStyle = {
     backgroundColor: isActive ? 'rgba(128, 128, 128, 0.2)' : 'transparent',
     color: colorScheme === 'dark' ? 'white' : 'black',
@@ -28,8 +35,22 @@ export const StyledNavLink: React.FC<StyledNavLinkProps> = (
     width: '90%',
     borderRadius: '8px',
     transition: 'background-color 0.3s ease',
+    cursor: disabled ? 'not-allowed' : 'pointer',
     ...style,
   };
+
+  const disabledStyle = {
+    ...activeStyle,
+    color: 'grey',
+  };
+
+  if (disabled) {
+    return (
+      <div style={disabledStyle} {...rest}>
+        {children}
+      </div>
+    );
+  }
 
   return (
     <>
@@ -40,7 +61,7 @@ export const StyledNavLink: React.FC<StyledNavLinkProps> = (
           </NavLink>
         </ActionTooltip>
       ) : (
-        <NavLink to={to} style={activeStyle} {...rest} ref={ref}>
+        <NavLink to={to} style={activeStyle} {...rest}>
           {children}
         </NavLink>
       )}
