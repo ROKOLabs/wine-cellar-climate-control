@@ -1,11 +1,10 @@
 import {
   Stack,
-  ActionIcon,
   useMantineColorScheme,
   AppShell,
   Divider,
-  NavLink,
   Avatar,
+  ActionIcon,
 } from '@mantine/core';
 import {
   IconSun,
@@ -13,36 +12,32 @@ import {
   IconSettings,
   IconHome2,
 } from '@tabler/icons-react';
-import { juxt } from 'ramda';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { ActionTooltip } from 'components/ActionTooltip';
+import { StyledNavLink } from 'components/StyledNavLink';
 import { useSidebarDispatch } from 'features/layout/hooks/useSidebarDispatch';
 import { useIsMobileView } from 'hooks/useIsMobileView';
 import { routes } from 'router/routes';
 
 export const NavigationBar = () => {
-  const navigate = useNavigate();
   const toggleSidebar = useSidebarDispatch();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const isMobile = useIsMobileView();
+  const location = useLocation();
 
-  const goDashboard = () => navigate(routes.dashboard);
-  const goSettings = () => navigate(routes.settings);
-
-  // TODO: Replace with the actual user data
-  const userInitials = 'JD';
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <>
       <AppShell.Section>
         {isMobile ? (
           <Stack py="md" align="left" pl="sm">
-            <Avatar tt="uppercase">{userInitials}</Avatar>
+            <Avatar tt="uppercase">JD</Avatar>
           </Stack>
         ) : (
           <Stack py="md" align="center">
-            <Avatar tt="uppercase">{userInitials}</Avatar>
+            <Avatar tt="uppercase">JD</Avatar>
           </Stack>
         )}
       </AppShell.Section>
@@ -53,54 +48,91 @@ export const NavigationBar = () => {
         <Stack py="md" align="center">
           {isMobile ? (
             <>
-              <NavLink
-                label="Home"
-                leftSection={<IconHome2 />}
-                onClick={juxt([toggleSidebar, goDashboard])}
-              />
-              <NavLink
-                label="Settings"
-                leftSection={<IconSettings />}
-                onClick={juxt([toggleSidebar, goSettings])}
-              />
-              <NavLink
-                label={`Switch to ${colorScheme === 'dark' ? 'light' : 'dark'} mode`}
-                leftSection={
-                  colorScheme === 'dark' ? <IconSun /> : <IconMoon />
-                }
-                onClick={juxt([toggleSidebar, toggleColorScheme])}
-              />
+              <StyledNavLink
+                to={routes.dashboard}
+                isActive={isActive(routes.dashboard)}
+                colorScheme={colorScheme}
+                onClick={toggleSidebar}
+              >
+                <IconHome2 style={{ marginRight: '16px' }} />
+                Home
+              </StyledNavLink>
+              <StyledNavLink
+                to={routes.settings}
+                isActive={isActive(routes.settings)}
+                colorScheme={colorScheme}
+                onClick={toggleSidebar}
+              >
+                <IconSettings style={{ marginRight: '16px' }} />
+                Settings
+              </StyledNavLink>
             </>
           ) : (
             <>
-              <ActionTooltip label="Home">
-                <ActionIcon
-                  size="xl"
-                  radius="md"
-                  variant="filled"
-                  onClick={goDashboard}
-                >
-                  <IconHome2 />
-                </ActionIcon>
-              </ActionTooltip>
-              <ActionTooltip label="Settings">
-                <ActionIcon
-                  size="xl"
-                  radius="md"
-                  variant="filled"
-                  onClick={goSettings}
-                >
-                  <IconSettings />
-                </ActionIcon>
-              </ActionTooltip>
+              <StyledNavLink
+                to={routes.dashboard}
+                isActive={isActive(routes.dashboard)}
+                colorScheme={colorScheme}
+                style={{
+                  justifyContent: 'center',
+                }}
+                // tooltipLabel="Home"
+              >
+                <IconHome2 />
+              </StyledNavLink>
+              <StyledNavLink
+                to={routes.settings}
+                isActive={isActive(routes.settings)}
+                colorScheme={colorScheme}
+                style={{
+                  justifyContent: 'center',
+                }}
+                // tooltipLabel="Settings"
+              >
+                <IconSettings />
+              </StyledNavLink>
+            </>
+          )}
+        </Stack>
+      </AppShell.Section>
+
+      <Divider />
+
+      <AppShell.Section>
+        <Stack py="md" align="center">
+          {isMobile ? (
+            <>
+              <ActionIcon
+                style={{
+                  backgroundColor: 'transparent',
+                  color: colorScheme === 'dark' ? 'white' : 'black',
+                  padding: '8px',
+                  justifyContent: 'start',
+                  width: '90%',
+                }}
+                onClick={toggleColorScheme}
+              >
+                {colorScheme === 'dark' ? (
+                  <IconSun style={{ marginRight: '16px' }} />
+                ) : (
+                  <IconMoon style={{ marginRight: '16px' }} />
+                )}
+                Switch to {colorScheme === 'dark' ? 'light' : 'dark'} mode
+              </ActionIcon>
+            </>
+          ) : (
+            <>
               <ActionTooltip
                 label={`Switch to ${colorScheme === 'dark' ? 'light' : 'dark'} mode`}
               >
                 <ActionIcon
                   size="xl"
                   radius="md"
-                  variant="filled"
                   onClick={toggleColorScheme}
+                  style={{
+                    backgroundColor: 'transparent',
+                    color: colorScheme === 'dark' ? 'white' : 'black',
+                  }}
                 >
                   {colorScheme === 'dark' ? <IconSun /> : <IconMoon />}
                 </ActionIcon>

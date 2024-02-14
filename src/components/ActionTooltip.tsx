@@ -5,13 +5,18 @@ type NavbarTooltipProps = TooltipProps & {
   children: ReactNode;
 };
 
-export const ActionTooltip = (props: NavbarTooltipProps) => (
+export const ActionTooltip = ({
+  children,
+  ...restProps
+}: NavbarTooltipProps) => (
   <Tooltip
     offset={10}
     position="right"
     openDelay={500}
     closeDelay={100}
     transitionProps={{ duration: 300 }}
-    {...props}
-  />
+    {...restProps}
+  >
+    {children}
+  </Tooltip>
 );
