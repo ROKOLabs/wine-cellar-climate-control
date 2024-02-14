@@ -35,13 +35,13 @@ export const StyledNavLink: React.FC<StyledNavLinkProps> = ({
     width: '90%',
     borderRadius: '8px',
     transition: 'background-color 0.3s ease',
-    cursor: disabled ? 'not-allowed' : 'pointer',
     ...style,
   };
 
   const disabledStyle = {
     ...activeStyle,
     color: 'grey',
+    cursor: 'not-allowed',
   };
 
   if (disabled) {
