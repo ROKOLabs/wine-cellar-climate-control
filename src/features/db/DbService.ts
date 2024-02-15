@@ -31,6 +31,10 @@ export type GetUserDetailsResponse = User | undefined;
 export type GetUserDetailsArg = string;
 export type SetUserDetailsArg = Partial<User> & { uid: string };
 export type SetUserDetailsResponse = void;
+export type GetSettingsResponse = Settings | undefined;
+export type GetSettingsArg = string;
+export type SetSettingsResponse = void;
+export type SetSettingsArg = { arduinoId: string; settings: Settings };
 
 export type SensorData = {
   arduino: number;
@@ -42,6 +46,16 @@ export type SensorData = {
 export type SensorDataWithDate = Omit<SensorData, 'date'> & { date: Date };
 type SensorDataWithTimestamp = Omit<SensorData, 'date'> & {
   date: Timestamp;
+};
+
+type SensorSettings = { min: number; max: number };
+export type Settings = {
+  led: number;
+  fan: number;
+  updateInterval: number;
+  co2: SensorSettings;
+  humidity: SensorSettings;
+  temperature: SensorSettings;
 };
 
 type RootCollection = 'users' | 'settings' | 'sensors';
@@ -148,4 +162,25 @@ export class DbService {
     const collRef = this.#getCollRef('sensors');
     return addDoc(collRef, data);
   }
+
+  /**
+   * Get settings for a given Arduino ID.
+   * @param arduinoId The Arduino ID to get settings for.
+   * @returns A promise that resolves with the settings object.
+   */
+  getSettings = (arduinoId: string) => {
+    const settingsDocRef = this.#getDocRef(`settings/${arduinoId}`);
+    return getDoc(settingsDocRef).then(getSnapshotData<Settings>);
+  };
+
+  /**
+   * Set settings for a given Arduino ID.
+   * @param arduinoId The Arduino ID to set settings for.
+   * @param settings The settings object to set.
+   * @returns A promise that resolves when the settings are set.
+   */
+  setSettings = ({ arduinoId, settings }: SetSettingsArg) => {
+    const settingsDocRef = this.#getDocRef(`settings/${arduinoId}`);
+    return setDoc(settingsDocRef, settings);
+  };
 }
