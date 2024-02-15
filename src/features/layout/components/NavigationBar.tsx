@@ -13,10 +13,11 @@ import {
   IconSettings,
   IconHome2,
 } from '@tabler/icons-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, NavLink as RRNavLink } from 'react-router-dom';
+
+import styles from './NavigationBar.module.css';
 
 import { ActionTooltip } from 'components/ActionTooltip';
-import { StyledNavLink } from 'components/StyledNavLink';
 import { useGetAuthStateQuery } from 'features/auth/authApi';
 import { useAuth } from 'features/auth/hooks/useAuth';
 import { useGetUserDetailsQuery } from 'features/db/dbApi';
@@ -30,9 +31,6 @@ export const NavigationBar = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const isMobile = useIsMobileView();
 
-  const location = useLocation();
-  const isActive = (path: string) => location.pathname === path;
-
   const { currentUserUid: userUid } = useAuth();
   const { currentData: userDetails } = useGetUserDetailsQuery(
     userUid ?? skipToken,
@@ -40,6 +38,12 @@ export const NavigationBar = () => {
 
   const { data: userLoggedIn } = useGetAuthStateQuery();
   const userInitials = getUserInitials(userDetails);
+
+  const location = useLocation();
+  const isRouteActive = (route: string) => {
+    const isActive = location.pathname === route;
+    return isActive;
+  };
 
   return (
     <>
@@ -60,53 +64,59 @@ export const NavigationBar = () => {
         <Stack py="md" align="center">
           {isMobile ? (
             <>
-              <StyledNavLink
+              <ActionIcon
+                component={RRNavLink}
                 to={routes.dashboard}
-                isActive={isActive(routes.dashboard)}
-                colorScheme={colorScheme}
-                onClick={toggleSidebar}
+                variant="subtle"
+                className={`${styles.actionIcon} ${isRouteActive(routes.dashboard) && styles.active} ${styles.actionIconMobile} ${colorScheme === 'dark' ? styles.dark : styles.light}`}
                 disabled={!userLoggedIn}
+                size="xl"
+                radius="md"
+                onClick={toggleSidebar}
               >
-                <IconHome2 style={{ marginRight: '16px' }} />
-                Home
-              </StyledNavLink>
-              <StyledNavLink
+                <IconHome2 style={{ marginRight: '16px' }} /> Home
+              </ActionIcon>
+              <ActionIcon
+                component={RRNavLink}
                 to={routes.settings}
-                isActive={isActive(routes.settings)}
-                colorScheme={colorScheme}
-                onClick={toggleSidebar}
+                variant="subtle"
+                className={`${styles.actionIcon} ${isRouteActive(routes.settings) && styles.active} ${styles.actionIconMobile} ${colorScheme === 'dark' ? styles.dark : styles.light}`}
                 disabled={!userLoggedIn}
+                size="xl"
+                radius="md"
+                onClick={toggleSidebar}
               >
-                <IconSettings style={{ marginRight: '16px' }} />
-                Settings
-              </StyledNavLink>
+                <IconSettings style={{ marginRight: '16px' }} /> Settings
+              </ActionIcon>
             </>
           ) : (
             <>
-              <StyledNavLink
-                to={routes.dashboard}
-                isActive={isActive(routes.dashboard)}
-                colorScheme={colorScheme}
-                style={{
-                  justifyContent: 'center',
-                }}
-                disabled={!userLoggedIn}
-                tooltipLabel="Home"
-              >
-                <IconHome2 />
-              </StyledNavLink>
-              <StyledNavLink
-                to={routes.settings}
-                isActive={isActive(routes.settings)}
-                colorScheme={colorScheme}
-                style={{
-                  justifyContent: 'center',
-                }}
-                disabled={!userLoggedIn}
-                tooltipLabel="Settings"
-              >
-                <IconSettings />
-              </StyledNavLink>
+              <ActionTooltip label={'Home'}>
+                <ActionIcon
+                  component={RRNavLink}
+                  to={routes.dashboard}
+                  variant="subtle"
+                  disabled={!userLoggedIn}
+                  size="xl"
+                  radius="md"
+                  className={`${styles.actionIcon} ${isRouteActive(routes.dashboard) && styles.active} ${colorScheme === 'dark' ? styles.dark : styles.light}`}
+                >
+                  <IconHome2 />
+                </ActionIcon>
+              </ActionTooltip>
+              <ActionTooltip label={'Settings'}>
+                <ActionIcon
+                  component={RRNavLink}
+                  to={routes.settings}
+                  variant="subtle"
+                  disabled={!userLoggedIn}
+                  size="xl"
+                  radius="md"
+                  className={`${styles.actionIcon} ${isRouteActive(routes.settings) && styles.active} ${colorScheme === 'dark' ? styles.dark : styles.light}`}
+                >
+                  <IconSettings />
+                </ActionIcon>
+              </ActionTooltip>
             </>
           )}
         </Stack>
@@ -121,11 +131,8 @@ export const NavigationBar = () => {
               <ActionIcon
                 style={{
                   backgroundColor: 'transparent',
-                  color: colorScheme === 'dark' ? 'white' : 'black',
-                  padding: '8px',
-                  justifyContent: 'start',
-                  width: '90%',
                 }}
+                className={`${styles.actionIcon} ${styles.actionIconMobile} ${colorScheme === 'dark' ? styles.dark : styles.light}`}
                 onClick={toggleColorScheme}
               >
                 {colorScheme === 'dark' ? (
@@ -147,8 +154,8 @@ export const NavigationBar = () => {
                   onClick={toggleColorScheme}
                   style={{
                     backgroundColor: 'transparent',
-                    color: colorScheme === 'dark' ? 'white' : 'black',
                   }}
+                  className={`${styles.actionIcon} ${colorScheme === 'dark' ? styles.dark : styles.light}`}
                 >
                   {colorScheme === 'dark' ? <IconSun /> : <IconMoon />}
                 </ActionIcon>

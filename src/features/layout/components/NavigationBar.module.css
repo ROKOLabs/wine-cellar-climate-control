@@ -1,0 +1,26 @@
+.actionIcon {
+  transition:
+    background-color 0.2s ease-out,
+    color 0.2s ease-out;
+  border-color: transparent;
+  color: var(--icon-color-dark);
+}
+
+.actionIcon.active {
+  background-color: var(--mantine-color-blue-filled) !important;
+}
+
+.actionIconMobile {
+  width: 90%;
+  justify-content: start;
+  padding: 8px;
+}
+
+:root {
+  --icon-color-dark: var(--mantine-color-white);
+  --icon-color-light: var(--mantine-color-black);
+}
+
+.actionIcon.light {
+  color: var(--icon-color-light);
+}
