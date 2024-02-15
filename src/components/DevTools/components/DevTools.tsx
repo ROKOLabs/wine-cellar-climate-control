@@ -5,7 +5,10 @@ import {
   useLogoutMutation,
   useRegisterMutation,
 } from 'features/auth/authApi';
-import { useAddSensorDataMutation } from 'features/db/dbApi';
+import {
+  useAddSensorDataMutation,
+  useSetSettingsMutation,
+} from 'features/db/dbApi';
 import { tapX } from 'utility/fp/tapX';
 
 const REGISTRATION_DATA = {
@@ -29,6 +32,21 @@ const DevTools = () => {
   const [login, { isLoading: isLoginLoading }] = useLoginMutation();
   const [addDataMutation, { isLoading: isAddDataLoading }] =
     useAddSensorDataMutation();
+  const [setSettingsMutation, { isLoading: isSetSettingsLoading }] =
+    useSetSettingsMutation();
+
+  const setSettings = () =>
+    setSettingsMutation({
+      arduinoId: '1',
+      settings: {
+        led: randomNum(2),
+        fan: randomNum(2),
+        updateInterval: randomNum(100),
+        co2: { min: randomNum(100), max: randomNum(100) },
+        humidity: { min: randomNum(100), max: randomNum(100) },
+        temperature: { min: randomNum(100), max: randomNum(100) },
+      },
+    }).catch(tapX('set settings error'));
 
   const handleRegister = () =>
     register(REGISTRATION_DATA)
@@ -57,6 +75,7 @@ const DevTools = () => {
   return (
     <Box
       style={{
+        maxWidth: 260,
         zIndex: 9999,
         position: 'fixed',
         padding: 16,
@@ -91,10 +110,21 @@ const DevTools = () => {
           >
             Logout
           </Button>
+          <Button
+            size="compact-sm"
+            loading={isAddDataLoading}
+            onClick={addData}
+          >
+            Add Data
+          </Button>
+          <Button
+            size="compact-sm"
+            loading={isSetSettingsLoading}
+            onClick={setSettings}
+          >
+            Set Settings
+          </Button>
         </Group>
-        <Button size="compact-sm" loading={isAddDataLoading} onClick={addData}>
-          Add Sensor Data
-        </Button>
       </Stack>
     </Box>
   );
