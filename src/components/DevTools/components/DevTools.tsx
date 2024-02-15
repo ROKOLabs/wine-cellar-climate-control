@@ -23,7 +23,7 @@ const LOGIN_DATA = {
 
 const randomNum = (n: number) => Math.floor(Math.random() * n);
 
-export const DevTools = () => {
+const DevTools = () => {
   const [register, { isLoading: isRegisterLoading }] = useRegisterMutation();
   const [logout, { isLoading: isLogoutLoading }] = useLogoutMutation();
   const [login, { isLoading: isLoginLoading }] = useLoginMutation();
@@ -57,8 +57,9 @@ export const DevTools = () => {
   return (
     <Box
       style={{
-        padding: 16,
+        zIndex: 9999,
         position: 'fixed',
+        padding: 16,
         right: 32,
         bottom: 32,
         border: 'solid 1px red',
@@ -98,3 +99,6 @@ export const DevTools = () => {
     </Box>
   );
 };
+
+// eslint-disable-next-line import/no-default-export
+export default DevTools;
