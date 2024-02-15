@@ -1,0 +1,9 @@
+body {
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--mantine-primary-color-6);
+    border-radius: 20px;
+  }
+}

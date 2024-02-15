@@ -38,15 +38,18 @@ export const Header = () => {
   const userLoggedIn = Boolean(currentUser);
 
   const handleLogout = () =>
-    logout().catch(() => {
-      notifications.show({
-        title: 'Logout Error',
-        message: 'An error occurred while logging out. Please try again later.',
-        color: 'red',
-        withBorder: true,
-        withCloseButton: true,
+    logout()
+      .unwrap()
+      .catch(() => {
+        notifications.show({
+          title: 'Logout Error',
+          message:
+            'An error occurred while logging out. Please try again later.',
+          color: 'red',
+          withBorder: true,
+          withCloseButton: true,
+        });
       });
-    });
 
   return (
     <Group gap="xs" px="md" h="100%" justify="space-between">

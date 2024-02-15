@@ -121,16 +121,22 @@ export class DbService {
       limit(10),
     );
 
-    return onSnapshot(q, (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === 'added') {
-          const data = change.doc.data() as SensorDataWithTimestamp;
-          // Convert date to milliseconds
-          const date = data.date.seconds * 1000;
-          listener({ ...data, date });
-        }
-      });
-    });
+    return onSnapshot(
+      q,
+      (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === 'added') {
+            const data = change.doc.data() as SensorDataWithTimestamp;
+            // Convert date to milliseconds
+            const date = data.date.seconds * 1000;
+            listener({ ...data, date });
+          }
+        });
+      },
+      (error) => {
+        console.error('Error getting sensor data:', error);
+      },
+    );
   }
 
   /**
