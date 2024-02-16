@@ -4,6 +4,7 @@ import { Notifications } from '@mantine/notifications';
 
 const theme = createTheme({
   cursorType: 'pointer',
+  activeClassName: 'Button',
 });
 
 export const ThemeProvider = (props: { children: React.ReactNode }) => (
