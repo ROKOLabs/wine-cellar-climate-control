@@ -1,5 +1,6 @@
 import { Box, Button, Group, Stack, Text } from '@mantine/core';
 
+import { useDevToolsVisibility } from 'components/DevTools/components/hooks/useDevToolsVisibility';
 import {
   useLoginMutation,
   useLogoutMutation,
@@ -34,6 +35,9 @@ const DevTools = () => {
     useAddSensorDataMutation();
   const [setSettingsMutation, { isLoading: isSetSettingsLoading }] =
     useSetSettingsMutation();
+  const isDevToolsVisible = useDevToolsVisibility();
+
+  if (!isDevToolsVisible) return null;
 
   const setSettings = () =>
     setSettingsMutation({
