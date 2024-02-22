@@ -1,48 +1,49 @@
-import { Title, Group, Switch } from '@mantine/core';
+import { Title, Group, Switch, Paper, Box } from '@mantine/core';
 import { IconBulb, IconPropeller } from '@tabler/icons-react';
-import React from 'react';
 
-type ControlProps = {
-  ledOn: boolean;
-  setLedOn: (value: boolean) => void;
-  fanOn: boolean;
-  setFanOn: (value: boolean) => void;
-  handleSaveSettings: () => void;
-  updateInterval: number;
-  setUpdateInterval: (value: number) => void;
-};
+import { useGetSettingsQuery, useSetSettingsMutation } from 'features/db/dbApi';
 
-export const ControlSection: React.FC<ControlProps> = ({
-  ledOn,
-  setLedOn,
-  fanOn,
-  setFanOn,
-}) => {
-  return (
-    <>
-      <Title order={5}>Control</Title>
+export const ControlSection = () => {
+  const [setSettings] = useSetSettingsMutation();
+  const { data } = useGetSettingsQuery('0');
 
-      <Group justify="space-between">
-        <Group gap="xs">
-          <IconBulb style={{ marginRight: '16px' }} />
-          LED switch
+  const handleLEDChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.currentTarget.checked;
+    setSettings({
+      arduinoId: '0',
+      settings: { ...data, led: value ? 1 : 0 },
+    });
+  };
+
+  const handleFanChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.currentTarget.checked;
+    setSettings({
+      arduinoId: '0',
+      settings: { ...data, fan: value ? 1 : 0 },
+    });
+  };
+
+  {
+    return (
+      <Paper withBorder shadow="md" p="xl" radius="md">
+        <Title order={5}>Control</Title>
+
+        <Group justify="space-between">
+          <Group gap="xs">
+            <Box component={IconBulb} mr="md" />
+            LED switch
+          </Group>
+          <Switch checked={Boolean(data?.led)} onChange={handleLEDChange} />
         </Group>
-        <Switch
-          checked={ledOn}
-          onChange={(event) => setLedOn(event.currentTarget.checked)}
-        />
-      </Group>
 
-      <Group justify="space-between">
-        <Group gap="xs">
-          <IconPropeller style={{ marginRight: '16px' }} />
-          Fan switch
+        <Group justify="space-between">
+          <Group gap="xs">
+            <Box component={IconPropeller} mr="md" />
+            Fan switch
+          </Group>
+          <Switch checked={Boolean(data?.fan)} onChange={handleFanChange} />
         </Group>
-        <Switch
-          checked={fanOn}
-          onChange={(event) => setFanOn(event.currentTarget.checked)}
-        />
-      </Group>
-    </>
-  );
+      </Paper>
+    );
+  }
 };

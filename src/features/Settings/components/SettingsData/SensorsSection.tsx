@@ -1,4 +1,4 @@
-import { Title, Group, TextInput, Stack } from '@mantine/core';
+import { Title, Group, Stack, Paper, Box, NumberInput } from '@mantine/core';
 import {
   IconFoldUp,
   IconFoldDown,
@@ -7,94 +7,62 @@ import {
   IconTemperatureSun,
   IconReload,
 } from '@tabler/icons-react';
-import React from 'react';
 
-type SensorsProps = {
-  updateInterval: number;
-  setUpdateInterval: (value: number) => void;
-  tempUpperLimit: number;
-  setTempUpperLimit: (value: number) => void;
-  tempLowerLimit: number;
-  setTempLowerLimit: (value: number) => void;
-  humidityUpperLimit: number;
-  setHumidityUpperLimit: (value: number) => void;
-  humidityLowerLimit: number;
-  setHumidityLowerLimit: (value: number) => void;
-  co2UpperLimit: number;
-  setCO2UpperLimit: (value: number) => void;
-  co2LowerLimit: number;
-  setCO2LowerLimit: (value: number) => void;
-};
+import { useGetSettingsQuery } from 'features/db/dbApi';
 
-export const SensorsSection: React.FC<SensorsProps> = ({
-  updateInterval,
-  setUpdateInterval,
-  tempUpperLimit,
-  setTempUpperLimit,
-  tempLowerLimit,
-  setTempLowerLimit,
-  humidityUpperLimit,
-  setHumidityUpperLimit,
-  humidityLowerLimit,
-  setHumidityLowerLimit,
-  co2UpperLimit,
-  setCO2UpperLimit,
-  co2LowerLimit,
-  setCO2LowerLimit,
-}) => {
+export const SensorsSection = () => {
+  // const [setSettings] = useSetSettingsMutation();
+  const { data } = useGetSettingsQuery('0');
+
+  if (!data) return null;
+
   return (
-    <>
+    <Paper withBorder shadow="md" p="xl" radius="md">
       <Title order={5}>Sensors</Title>
 
       <Group justify="space-between">
         <Group gap="xs">
-          <IconReload style={{ marginRight: '16px' }} />
+          <Box component={IconReload} mr="md" />
           Update Interval
         </Group>
-        <TextInput
-          type="number"
-          style={{ width: '50px' }}
-          value={updateInterval}
-          onChange={(event) =>
-            setUpdateInterval(Number(event.currentTarget.value))
-          }
+        <NumberInput
+          w={50}
+          value={data.updateInterval}
+          defaultValue={data.updateInterval}
+          // onChange={(value) =>
+          //   setSettings({ arduinoId: '0', settings: { updateInterval: value } })
+          // }
         />
       </Group>
 
       <Group>
         <Group justify="space-between">
           <Group gap="xs">
-            <IconTemperatureSun style={{ marginRight: '16px' }} />
+            <Box component={IconTemperatureSun} mr="md" />
             Temperature
           </Group>
         </Group>
-        <Stack gap="xs" style={{ marginLeft: '30px', width: '100%' }}>
+        <Stack gap="xs" ml="md" w="100%">
           <Group justify="space-between">
             <Group gap="xs">
-              <IconFoldUp style={{ marginRight: '16px' }} />
+              <Box component={IconFoldUp} mr="md" />
               Upper Limit
             </Group>
-            <TextInput
-              style={{ width: '50px' }}
-              type="number"
-              value={tempUpperLimit}
-              onChange={(event) =>
-                setTempUpperLimit(Number(event.currentTarget.value))
-              }
+            <NumberInput
+              w={50}
+              // value={data.temperature.max}
+              // defaultValue={data.temperature.min}
             />
           </Group>
           <Group justify="space-between">
             <Group gap="xs">
-              <IconFoldDown style={{ marginRight: '16px' }} />
+              <Box component={IconFoldDown} mr="md" />
               Lower Limit
             </Group>
-            <TextInput
-              style={{ width: '50px' }}
-              type="number"
-              value={tempLowerLimit}
-              onChange={(event) =>
-                setTempLowerLimit(Number(event.currentTarget.value))
-              }
+            <NumberInput
+              w={50}
+              // value={data.temperature.min}
+              // defaultValue={data.temperature.min}
             />
           </Group>
         </Stack>
@@ -103,37 +71,31 @@ export const SensorsSection: React.FC<SensorsProps> = ({
       <Group>
         <Group justify="space-between">
           <Group gap="xs">
-            <IconDropletHalf2Filled style={{ marginRight: '16px' }} />
+            <Box component={IconDropletHalf2Filled} mr="md" />
             Humidity
           </Group>
         </Group>
-        <Stack gap="xs" style={{ marginLeft: '30px', width: '100%' }}>
+        <Stack gap="xs" ml="md" w="100%">
           <Group justify="space-between">
             <Group gap="xs">
-              <IconFoldUp style={{ marginRight: '16px' }} />
+              <Box component={IconFoldUp} mr="md" />
               Upper Limit
             </Group>
-            <TextInput
-              style={{ width: '50px' }}
-              type="number"
-              value={humidityUpperLimit}
-              onChange={(event) =>
-                setHumidityUpperLimit(Number(event.currentTarget.value))
-              }
+            <NumberInput
+              w={50}
+              // value={data.humidity.max}
+              // defaultValue={data.humidity.max}
             />
           </Group>
           <Group justify="space-between">
             <Group gap="xs">
-              <IconFoldDown style={{ marginRight: '16px' }} />
+              <Box component={IconFoldDown} mr="md" />
               Lower Limit
             </Group>
-            <TextInput
-              style={{ width: '50px' }}
-              type="number"
-              value={humidityLowerLimit}
-              onChange={(event) =>
-                setHumidityLowerLimit(Number(event.currentTarget.value))
-              }
+            <NumberInput
+              w={50}
+              // value={data.humidity.min}
+              // defaultValue={data.humidity.min}
             />
           </Group>
         </Stack>
@@ -142,41 +104,35 @@ export const SensorsSection: React.FC<SensorsProps> = ({
       <Group>
         <Group justify="space-between">
           <Group gap="xs">
-            <IconChartBubble style={{ marginRight: '16px' }} />
+            <Box component={IconChartBubble} mr="md" />
             CO2
           </Group>
         </Group>
-        <Stack gap="xs" style={{ marginLeft: '30px', width: '100%' }}>
+        <Stack gap="xs" ml="md" w="100%">
           <Group justify="space-between">
             <Group gap="xs">
-              <IconFoldUp style={{ marginRight: '16px' }} />
+              <Box component={IconFoldUp} mr="md" />
               Upper Limit
             </Group>
-            <TextInput
-              style={{ width: '50px' }}
-              type="number"
-              value={co2UpperLimit}
-              onChange={(event) =>
-                setCO2UpperLimit(Number(event.currentTarget.value))
-              }
+            <NumberInput
+              w={50}
+              // value={data.co2.max}
+              // defaultValue={data.co2.max}
             />
           </Group>
           <Group justify="space-between">
             <Group gap="xs">
-              <IconFoldDown style={{ marginRight: '16px' }} />
+              <Box component={IconFoldDown} mr="md" />
               Lower Limit
             </Group>
-            <TextInput
-              style={{ width: '50px' }}
-              type="number"
-              value={co2LowerLimit}
-              onChange={(event) =>
-                setCO2LowerLimit(Number(event.currentTarget.value))
-              }
+            <NumberInput
+              w={50}
+              // value={data.co2.min}
+              // defaultValue={data.co2.min}
             />
           </Group>
         </Stack>
       </Group>
-    </>
+    </Paper>
   );
 };

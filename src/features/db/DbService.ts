@@ -34,7 +34,7 @@ export type SetUserDetailsResponse = void;
 export type GetSettingsResponse = Settings | undefined;
 export type GetSettingsArg = string;
 export type SetSettingsResponse = void;
-export type SetSettingsArg = { arduinoId: string; settings: Settings };
+export type SetSettingsArg = { arduinoId: string; settings: Partial<Settings> };
 
 export type SensorData = {
   arduino: number;

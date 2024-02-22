@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
+import { devToolsSliceReducer } from 'components/DevTools/provider/DevToolsSlice';
 import { authApi } from 'features/auth/authApi';
 import { dbApi } from 'features/db/dbApi';
 
@@ -8,6 +9,7 @@ export const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
     [dbApi.reducerPath]: dbApi.reducer,
+    devTools: devToolsSliceReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(authApi.middleware, dbApi.middleware),

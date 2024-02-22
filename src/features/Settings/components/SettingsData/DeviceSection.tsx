@@ -1,35 +1,38 @@
-import { Title, Group, Select } from '@mantine/core';
+import { Title, Group, Select, Paper, Box } from '@mantine/core';
 import { IconBuildingFactory2 } from '@tabler/icons-react';
-import React from 'react';
+import { useState } from 'react';
 
-type DeviceProps = {
-  deviceOptions: { value: string; label: string }[];
-  selectedDevice: string;
-  handleDeviceChange: (value: string | null) => void;
-};
+export const DeviceSection = () => {
+  const [selectedDevice, setSelectedDevice] = useState('Arduino1');
 
-export const DeviceSection: React.FC<DeviceProps> = ({
-  deviceOptions,
-  selectedDevice,
-  handleDeviceChange,
-}) => {
+  const deviceOptions = [
+    { value: 'Arduino1', label: 'Arduino 1' },
+    { value: 'Arduino2', label: 'Arduino 2' },
+  ];
+
+  const handleDeviceChange = (value: string | null) => {
+    if (value !== null) {
+      setSelectedDevice(value);
+    }
+  };
+
   return (
-    <>
+    <Paper withBorder shadow="md" p="xl" radius="md">
       <Title order={5}>Device</Title>
 
       <Group justify="space-between">
         <Group gap="xs">
-          <IconBuildingFactory2 style={{ marginRight: '16px' }} />
+          <Box component={IconBuildingFactory2} mr="md" />
           Select Device
         </Group>
         <Select
-          style={{ width: '120px' }}
+          w={120}
           data={deviceOptions}
           value={selectedDevice}
           onChange={handleDeviceChange}
           checkIconPosition="right"
         />
       </Group>
-    </>
+    </Paper>
   );
 };

@@ -1,31 +1,35 @@
-import { Title, Group, Switch } from '@mantine/core';
+import {
+  Box,
+  Group,
+  Paper,
+  Switch,
+  Title,
+  useMantineColorScheme,
+} from '@mantine/core';
 import { IconMoon, IconTool, IconExclamationCircle } from '@tabler/icons-react';
-import React from 'react';
+import { useState } from 'react';
 
-type SettingsProps = {
-  isDarkTheme: boolean;
-  toggleColorScheme: () => void;
-  showDevTools: boolean;
+import { useDevToolsVisibility } from 'components/DevTools/hooks/useDevToolsVisibility';
+
+type SettingsSectionProps = {
   toggleDevTools: () => void;
-  showErrors: boolean;
-  setShowErrors: (value: boolean) => void;
 };
 
-export const SettingsSection: React.FC<SettingsProps> = ({
-  isDarkTheme,
-  toggleColorScheme,
-  showDevTools,
+export const SettingsSection: React.FC<SettingsSectionProps> = ({
   toggleDevTools,
-  showErrors,
-  setShowErrors,
-}) => {
+}: SettingsSectionProps) => {
+  const showDevTools = useDevToolsVisibility();
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const [showErrors, setShowErrors] = useState(false);
+  const isDarkTheme = colorScheme === 'dark';
+
   return (
-    <>
+    <Paper withBorder shadow="md" p="xl" radius="md">
       <Title order={5}>Settings</Title>
 
       <Group justify="space-between">
         <Group gap="xs">
-          <IconMoon style={{ marginRight: '16px' }} />
+          <Box component={IconMoon} mr="md" />
           Dark Theme
         </Group>
         <Switch checked={isDarkTheme} onChange={toggleColorScheme} />
@@ -33,7 +37,7 @@ export const SettingsSection: React.FC<SettingsProps> = ({
 
       <Group justify="space-between">
         <Group gap="xs">
-          <IconTool style={{ marginRight: '16px' }} />
+          <Box component={IconTool} mr="md" />
           Developer menu
         </Group>
         <Switch checked={showDevTools} onChange={toggleDevTools} />
@@ -41,14 +45,14 @@ export const SettingsSection: React.FC<SettingsProps> = ({
 
       <Group justify="space-between">
         <Group gap="xs">
-          <IconExclamationCircle style={{ marginRight: '16px' }} />
+          <Box component={IconExclamationCircle} mr="md" />
           Show all errors
         </Group>
         <Switch
           checked={showErrors}
-          onChange={(event) => setShowErrors(event.currentTarget.checked)}
+          onChange={(value) => setShowErrors(value.currentTarget.checked)}
         />
       </Group>
-    </>
+    </Paper>
   );
 };
