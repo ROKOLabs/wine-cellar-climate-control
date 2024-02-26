@@ -1,4 +1,4 @@
-import { Title, Group, Select, Paper, Box } from '@mantine/core';
+import { Title, Group, Select, Paper, Box, Stack } from '@mantine/core';
 import { IconBuildingFactory2 } from '@tabler/icons-react';
 import { useState } from 'react';
 
@@ -18,21 +18,23 @@ export const DeviceSection = () => {
 
   return (
     <Paper withBorder shadow="md" p="xl" radius="md">
-      <Title order={5}>Device</Title>
+      <Stack>
+        <Title order={5}>Device</Title>
 
-      <Group justify="space-between">
-        <Group gap="xs">
-          <Box component={IconBuildingFactory2} mr="md" />
-          Select Device
+        <Group justify="space-between">
+          <Group gap="xs">
+            <Box component={IconBuildingFactory2} mr="md" />
+            Select Device
+          </Group>
+          <Select
+            w={120}
+            data={deviceOptions}
+            value={selectedDevice}
+            onChange={handleDeviceChange}
+            checkIconPosition="right"
+          />
         </Group>
-        <Select
-          w={120}
-          data={deviceOptions}
-          value={selectedDevice}
-          onChange={handleDeviceChange}
-          checkIconPosition="right"
-        />
-      </Group>
+      </Stack>
     </Paper>
   );
 };

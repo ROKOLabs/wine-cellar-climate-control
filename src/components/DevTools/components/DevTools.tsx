@@ -1,6 +1,6 @@
 import { Box, Button, Group, Stack, Text } from '@mantine/core';
 
-import { selectIsDevToolsOpen } from 'components/DevTools/provider/DevToolsSlice';
+import { useDevToolsOpen } from 'components/DevTools/hooks/useDevToolsOpen';
 import {
   useLoginMutation,
   useLogoutMutation,
@@ -10,7 +10,6 @@ import {
   useAddSensorDataMutation,
   useSetSettingsMutation,
 } from 'features/db/dbApi';
-import { useAppSelector } from 'store/hooks';
 import { tapX } from 'utility/fp/tapX';
 
 const REGISTRATION_DATA = {
@@ -36,7 +35,7 @@ const DevTools = () => {
     useAddSensorDataMutation();
   const [setSettingsMutation, { isLoading: isSetSettingsLoading }] =
     useSetSettingsMutation();
-  const isDevToolsOpen = useAppSelector(selectIsDevToolsOpen);
+  const isDevToolsOpen = useDevToolsOpen();
 
   if (!isDevToolsOpen) {
     return null;
