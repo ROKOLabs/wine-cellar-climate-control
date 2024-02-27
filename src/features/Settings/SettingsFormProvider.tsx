@@ -1,6 +1,9 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Group } from '@mantine/core';
 import { PropsWithChildren } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
+
+import { SettingsSchema } from './config';
 
 import { FormDevTools } from 'components/FormDevTools';
 import { Settings } from 'features/db/DbService';
@@ -18,14 +21,19 @@ export const SettingsFormProvider = ({ children }: PropsWithChildren) => {
 
   const form = useForm<Settings>({
     defaultValues: () => getSettings(ARDUINO_ID).unwrap(),
-    // TODO: Add Zod validation schema for settings
+    resolver: zodResolver(SettingsSchema),
   });
 
-  const onSubmit = (settings: Settings) =>
+  const onSubmit = (settings: Settings) => {
     setSettings({ arduinoId: ARDUINO_ID, settings })
       .unwrap()
-      // TODO: Handle error (show toast or smth. else)
-      .catch(console.error);
+      .then(() => {
+        console.log('Settings saved successfully!');
+      })
+      .catch((error) => {
+        console.error('Error saving settings:', error);
+      });
+  };
 
   return (
     <FormProvider {...form}>

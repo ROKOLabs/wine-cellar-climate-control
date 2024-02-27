@@ -1,4 +1,4 @@
-import { Title, Group, Stack, Paper, Box, NumberInput } from '@mantine/core';
+import { Title, Group, Stack, Paper, Box } from '@mantine/core';
 import {
   IconFoldUp,
   IconFoldDown,
@@ -8,14 +8,9 @@ import {
   IconReload,
 } from '@tabler/icons-react';
 
-import { useGetSettingsQuery } from 'features/db/dbApi';
+import { RegisterableNumberInput } from './RegisterableNumberInput';
 
 export const SensorsSection = () => {
-  // const [setSettings] = useSetSettingsMutation();
-  const { data } = useGetSettingsQuery('0');
-
-  if (!data) return null;
-
   return (
     <Paper withBorder shadow="md" p="xl" radius="md">
       <Stack>
@@ -26,14 +21,7 @@ export const SensorsSection = () => {
             <Box component={IconReload} mr="md" />
             Update Interval
           </Group>
-          <NumberInput
-            w={50}
-            value={data.updateInterval}
-            defaultValue={data.updateInterval}
-            // onChange={(value) =>
-            //   setSettings({ arduinoId: '0', settings: { updateInterval: value } })
-            // }
-          />
+          <RegisterableNumberInput name="updateInterval" />
         </Group>
 
         <Group>
@@ -49,22 +37,14 @@ export const SensorsSection = () => {
                 <Box component={IconFoldUp} mr="md" />
                 Upper Limit
               </Group>
-              <NumberInput
-                w={50}
-                // value={data.temperature.max}
-                // defaultValue={data.temperature.min}
-              />
+              <RegisterableNumberInput name="temperature.max" />
             </Group>
             <Group justify="space-between">
               <Group gap="xs">
                 <Box component={IconFoldDown} mr="md" />
                 Lower Limit
               </Group>
-              <NumberInput
-                w={50}
-                // value={data.temperature.min}
-                // defaultValue={data.temperature.min}
-              />
+              <RegisterableNumberInput name="temperature.min" />
             </Group>
           </Stack>
         </Group>
@@ -82,22 +62,14 @@ export const SensorsSection = () => {
                 <Box component={IconFoldUp} mr="md" />
                 Upper Limit
               </Group>
-              <NumberInput
-                w={50}
-                // value={data.humidity.max}
-                // defaultValue={data.humidity.max}
-              />
+              <RegisterableNumberInput name="humidity.max" />
             </Group>
             <Group justify="space-between">
               <Group gap="xs">
                 <Box component={IconFoldDown} mr="md" />
                 Lower Limit
               </Group>
-              <NumberInput
-                w={50}
-                // value={data.humidity.min}
-                // defaultValue={data.humidity.min}
-              />
+              <RegisterableNumberInput name="humidity.min" />
             </Group>
           </Stack>
         </Group>
@@ -115,22 +87,14 @@ export const SensorsSection = () => {
                 <Box component={IconFoldUp} mr="md" />
                 Upper Limit
               </Group>
-              <NumberInput
-                w={50}
-                // value={data.co2.max}
-                // defaultValue={data.co2.max}
-              />
+              <RegisterableNumberInput name="co2.max" />
             </Group>
             <Group justify="space-between">
               <Group gap="xs">
                 <Box component={IconFoldDown} mr="md" />
                 Lower Limit
               </Group>
-              <NumberInput
-                w={50}
-                // value={data.co2.min}
-                // defaultValue={data.co2.min}
-              />
+              <RegisterableNumberInput name="co2.min" />
             </Group>
           </Stack>
         </Group>
