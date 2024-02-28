@@ -7,10 +7,12 @@ import {
   IconTemperatureSun,
   IconReload,
 } from '@tabler/icons-react';
+import { useFormContext } from 'react-hook-form';
 
-import { RegisterableNumberInput } from './RegisterableNumberInput';
+import { CustomNumberInput } from './CustomNumberInput';
 
 export const SensorsSection = () => {
+  const { control } = useFormContext();
   return (
     <Paper withBorder shadow="md" p="xl" radius="md">
       <Stack>
@@ -21,7 +23,7 @@ export const SensorsSection = () => {
             <Box component={IconReload} mr="md" />
             Update Interval
           </Group>
-          <RegisterableNumberInput name="updateInterval" />
+          <CustomNumberInput name="updateInterval" control={control} />
         </Group>
 
         <Group>
@@ -37,14 +39,14 @@ export const SensorsSection = () => {
                 <Box component={IconFoldUp} mr="md" />
                 Upper Limit
               </Group>
-              <RegisterableNumberInput name="temperature.max" />
+              <CustomNumberInput name="temperature.max" control={control} />
             </Group>
             <Group justify="space-between">
               <Group gap="xs">
                 <Box component={IconFoldDown} mr="md" />
                 Lower Limit
               </Group>
-              <RegisterableNumberInput name="temperature.min" />
+              <CustomNumberInput name="temperature.min" control={control} />
             </Group>
           </Stack>
         </Group>
@@ -62,14 +64,14 @@ export const SensorsSection = () => {
                 <Box component={IconFoldUp} mr="md" />
                 Upper Limit
               </Group>
-              <RegisterableNumberInput name="humidity.max" />
+              <CustomNumberInput name="humidity.max" control={control} />
             </Group>
             <Group justify="space-between">
               <Group gap="xs">
                 <Box component={IconFoldDown} mr="md" />
                 Lower Limit
               </Group>
-              <RegisterableNumberInput name="humidity.min" />
+              <CustomNumberInput name="humidity.min" control={control} />
             </Group>
           </Stack>
         </Group>
@@ -87,14 +89,14 @@ export const SensorsSection = () => {
                 <Box component={IconFoldUp} mr="md" />
                 Upper Limit
               </Group>
-              <RegisterableNumberInput name="co2.max" />
+              <CustomNumberInput name="co2.max" control={control} />
             </Group>
             <Group justify="space-between">
               <Group gap="xs">
                 <Box component={IconFoldDown} mr="md" />
                 Lower Limit
               </Group>
-              <RegisterableNumberInput name="co2.min" />
+              <CustomNumberInput name="co2.min" control={control} />
             </Group>
           </Stack>
         </Group>
