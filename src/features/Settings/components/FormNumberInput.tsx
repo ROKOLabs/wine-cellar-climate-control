@@ -8,7 +8,7 @@ export type NumberInputProps<T extends Record<string, unknown>> =
   UseControllerProps<T> &
     Omit<MantineNumberInputProps, 'value' | 'defaultValue'>;
 
-export const CustomNumberInput = <T extends Record<string, unknown>>({
+export const FormNumberInput = <T extends Record<string, unknown>>({
   name,
   control,
   defaultValue,
