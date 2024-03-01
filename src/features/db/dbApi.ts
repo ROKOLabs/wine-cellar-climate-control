@@ -3,6 +3,8 @@ import type { Unsubscribe } from 'firebase/firestore';
 
 import {
   DbService,
+  GetSensorDataRangeArg,
+  GetSensorDataRangeResponse,
   GetSettingsArg,
   GetSettingsResponse,
   GetUserDetailsArg,
@@ -100,6 +102,17 @@ export const dbApi = createApi({
           .then(formatData)
           .catch(formatError),
     }),
+
+    getSensorDataRange: builder.query<
+      GetSensorDataRangeResponse,
+      GetSensorDataRangeArg
+    >({
+      queryFn: (queryArg) =>
+        DbService.getInstance()
+          .getSensorDataRange(queryArg)
+          .then(formatData)
+          .catch(formatError),
+    }),
   }),
 });
 
@@ -110,6 +123,7 @@ export const {
   useGetSensorDataQuery,
   useGetSettingsQuery,
   useSetSettingsMutation,
+  useLazyGetSensorDataRangeQuery,
 } = dbApi;
 
 export const useLazyGetUserDetailsQuerySubscription =
