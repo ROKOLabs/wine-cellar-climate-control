@@ -1,5 +1,6 @@
 import { Button, Container, Title } from '@mantine/core';
 
+import { DateRangePicker } from 'features/History/components/DateRangePicker/DateRangePicker';
 import { useLazyGetSensorDataRangeQuery } from 'features/db/dbApi';
 
 export const History = () => {
@@ -21,6 +22,7 @@ export const History = () => {
       <Button loading={isLoading} onClick={handleGetData}>
         Get sensor data
       </Button>
+      <DateRangePicker />
     </Container>
   );
 };
