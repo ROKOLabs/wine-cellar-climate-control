@@ -8,7 +8,7 @@ import {
   IconReload,
 } from '@tabler/icons-react';
 
-import { FormNumberInput } from './FormNumberInput';
+import { FormNumberInput } from 'components/FormNumberInput';
 
 export const SensorsSection = () => {
   return (

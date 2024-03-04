@@ -3,11 +3,13 @@ import { createSlice } from '@reduxjs/toolkit';
 export type SettingsState = {
   isDarkTheme: boolean;
   showErrors: boolean;
+  selectedDevice: '0' | '1' | '2';
 };
 
 const initialState: SettingsState = {
   isDarkTheme: false,
   showErrors: false,
+  selectedDevice: '1',
 };
 
 const settingsSlice = createSlice({
@@ -17,12 +19,16 @@ const settingsSlice = createSlice({
     toggleDarkTheme(state) {
       state.isDarkTheme = !state.isDarkTheme;
     },
-    setShowErrors(state) {
+    toggleShowErrors(state) {
       state.showErrors = !state.showErrors;
+    },
+    setSelectedDevice(state, action) {
+      state.selectedDevice = action.payload;
     },
   },
 });
 
-export const { toggleDarkTheme, setShowErrors } = settingsSlice.actions;
+export const { toggleDarkTheme, toggleShowErrors, setSelectedDevice } =
+  settingsSlice.actions;
 
 export const { reducer: settingsSliceReducer } = settingsSlice;

@@ -1,9 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Group } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import { PropsWithChildren } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
-import { SettingsSchema } from './config';
+import { SettingsSchema } from './settingsFormValidation';
 
 import { FormDevTools } from 'components/FormDevTools';
 import { Settings } from 'features/db/DbService';
@@ -11,27 +12,40 @@ import {
   useLazyGetSettingsQuery,
   useSetSettingsMutation,
 } from 'features/db/dbApi';
-
-// TODO: Implement setting slice if needed changing arduinoId in the future
-const ARDUINO_ID = '1';
+import { useAppSelector } from 'store/hooks';
 
 export const SettingsFormProvider = ({ children }: PropsWithChildren) => {
   const [getSettings] = useLazyGetSettingsQuery();
   const [setSettings, { isLoading }] = useSetSettingsMutation();
+  const selectedDevice = useAppSelector(
+    (state) => state.settings.selectedDevice,
+  );
 
   const form = useForm<Settings>({
-    defaultValues: () => getSettings(ARDUINO_ID).unwrap(),
+    defaultValues: () => getSettings(selectedDevice).unwrap(),
     resolver: zodResolver(SettingsSchema),
   });
 
   const onSubmit = (settings: Settings) => {
-    setSettings({ arduinoId: ARDUINO_ID, settings })
+    setSettings({ arduinoId: selectedDevice, settings })
       .unwrap()
       .then(() => {
-        console.log('Settings saved successfully!');
+        notifications.show({
+          title: 'Congratulations!',
+          message: 'Settings saved successfully!',
+          color: 'green',
+          withBorder: true,
+          withCloseButton: false,
+        });
       })
       .catch((error) => {
-        console.error('Error saving settings:', error);
+        notifications.show({
+          title: 'Error saving settings:',
+          message: error,
+          color: 'red',
+          withBorder: true,
+          withCloseButton: false,
+        });
       });
   };
 

@@ -1,22 +1,24 @@
 import { Title, Group, Select, Paper, Box, Stack } from '@mantine/core';
 import { IconBuildingFactory2 } from '@tabler/icons-react';
 
-import { setSelectedDevice } from './DeviceSlice';
-
+import { setSelectedDevice } from 'features/Settings/SettingsSlice';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 
 export const DeviceSection = () => {
-  const selectedDevice = useAppSelector((state) => state.device.selectedDevice);
+  const selectedDevice = useAppSelector(
+    (state) => state.settings.selectedDevice,
+  );
   const dispatch = useAppDispatch();
 
   const deviceOptions = [
-    { value: 'Arduino1', label: 'Arduino 1' },
-    { value: 'Arduino2', label: 'Arduino 2' },
+    { value: '0', label: 'Arduino 1' },
+    { value: '1', label: 'Arduino 2' },
+    { value: '2', label: 'Arduino 3' },
   ];
 
   const handleDeviceChange = (value: string | null) => {
     if (value !== null) {
-      dispatch(setSelectedDevice(value));
+      dispatch(setSelectedDevice(value as '0' | '1' | '2'));
     }
   };
 

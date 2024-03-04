@@ -9,10 +9,12 @@ import {
 } from '@mantine/core';
 import { IconMoon, IconTool, IconExclamationCircle } from '@tabler/icons-react';
 
-import { toggleDarkTheme, setShowErrors } from './SettingsSlice';
-
 import { useDevToolsOpen } from 'components/DevTools/hooks/useDevToolsOpen';
 import { toggleDevTools } from 'components/DevTools/provider/DevToolsSlice';
+import {
+  toggleDarkTheme,
+  toggleShowErrors,
+} from 'features/Settings/SettingsSlice';
 import { useAppDispatch } from 'store/hooks';
 
 export const SettingsSection = () => {
@@ -32,7 +34,7 @@ export const SettingsSection = () => {
   };
 
   const handleToggleErrors = () => {
-    dispatch(setShowErrors());
+    dispatch(toggleShowErrors());
   };
 
   return (
