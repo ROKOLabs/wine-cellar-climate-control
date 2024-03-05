@@ -1,17 +1,25 @@
 import { Group } from '@mantine/core';
-import { DateInput } from '@mantine/dates';
+import { DateInput, DateValue } from '@mantine/dates';
 import { IconCalendar } from '@tabler/icons-react';
-import { useState } from 'react';
 
-export const DateRangePicker = () => {
-  const [from, setFrom] = useState<Date | null>(null);
-  const [to, setTo] = useState<Date | null>(null);
+type Props = {
+  from: Date;
+  onChangeFrom: (date: DateValue) => void;
+  to: Date;
+  onChangeTo: (date: DateValue) => void;
+};
 
+export const DateRangePicker = ({
+  from,
+  onChangeFrom,
+  to,
+  onChangeTo,
+}: Props) => {
   return (
     <Group mt="xl">
       <DateInput
         value={from}
-        onChange={setFrom}
+        onChange={onChangeFrom}
         label="From"
         placeholder="DD/MM/YYYY"
         valueFormat="DD/MM/YYYY"
@@ -19,20 +27,18 @@ export const DateRangePicker = () => {
         withAsterisk
         firstDayOfWeek={0}
         maxDate={to || new Date()}
-        clearable
       />
       <DateInput
         value={to}
-        onChange={setTo}
+        onChange={onChangeTo}
         label="To"
         placeholder="DD/MM/YYYY"
         valueFormat="DD/MM/YYYY"
         leftSection={<IconCalendar size={18} />}
         withAsterisk
         firstDayOfWeek={0}
-        minDate={from ?? undefined}
+        minDate={from}
         maxDate={new Date()}
-        clearable
       />
     </Group>
   );
