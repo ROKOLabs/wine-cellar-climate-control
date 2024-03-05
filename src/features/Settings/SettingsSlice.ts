@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
 
 export type SettingsState = {
   isDarkTheme: boolean;
@@ -9,7 +9,7 @@ export type SettingsState = {
 const initialState: SettingsState = {
   isDarkTheme: false,
   showErrors: false,
-  selectedDevice: '1',
+  selectedDevice: '0',
 };
 
 const settingsSlice = createSlice({
@@ -32,3 +32,13 @@ export const { toggleDarkTheme, toggleShowErrors, setSelectedDevice } =
   settingsSlice.actions;
 
 export const { reducer: settingsSliceReducer } = settingsSlice;
+
+export const selectSelectedDevice = createSelector(
+  (state: { settings: SettingsState }) => state.settings,
+  (settings) => settings.selectedDevice,
+);
+
+export const selectShowErrors = createSelector(
+  (state: { settings: SettingsState }) => state.settings,
+  (settings) => settings.showErrors,
+);

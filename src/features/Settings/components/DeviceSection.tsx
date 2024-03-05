@@ -1,25 +1,25 @@
 import { Title, Group, Select, Paper, Box, Stack } from '@mantine/core';
 import { IconBuildingFactory2 } from '@tabler/icons-react';
 
-import { setSelectedDevice } from 'features/Settings/SettingsSlice';
+import {
+  SettingsState,
+  selectSelectedDevice,
+  setSelectedDevice,
+} from 'features/Settings/settingsSlice';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 
 export const DeviceSection = () => {
-  const selectedDevice = useAppSelector(
-    (state) => state.settings.selectedDevice,
-  );
+  const selectedDevice = useAppSelector(selectSelectedDevice);
   const dispatch = useAppDispatch();
 
   const deviceOptions = [
-    { value: '0', label: 'Arduino 1' },
-    { value: '1', label: 'Arduino 2' },
-    { value: '2', label: 'Arduino 3' },
+    { value: '0' as SettingsState['selectedDevice'], label: 'Arduino 1' },
+    { value: '1' as SettingsState['selectedDevice'], label: 'Arduino 2' },
+    { value: '2' as SettingsState['selectedDevice'], label: 'Arduino 3' },
   ];
 
   const handleDeviceChange = (value: string | null) => {
-    if (value !== null) {
-      dispatch(setSelectedDevice(value as '0' | '1' | '2'));
-    }
+    dispatch(setSelectedDevice(value));
   };
 
   return (
@@ -36,6 +36,7 @@ export const DeviceSection = () => {
             w={120}
             data={deviceOptions}
             value={selectedDevice}
+            defaultValue={selectedDevice}
             onChange={handleDeviceChange}
             checkIconPosition="right"
           />

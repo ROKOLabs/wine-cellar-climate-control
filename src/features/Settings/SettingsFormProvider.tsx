@@ -5,6 +5,7 @@ import { PropsWithChildren } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
 import { SettingsSchema } from './settingsFormValidation';
+import { selectSelectedDevice } from './settingsSlice';
 
 import { FormDevTools } from 'components/FormDevTools';
 import { Settings } from 'features/db/DbService';
@@ -17,9 +18,7 @@ import { useAppSelector } from 'store/hooks';
 export const SettingsFormProvider = ({ children }: PropsWithChildren) => {
   const [getSettings] = useLazyGetSettingsQuery();
   const [setSettings, { isLoading }] = useSetSettingsMutation();
-  const selectedDevice = useAppSelector(
-    (state) => state.settings.selectedDevice,
-  );
+  const selectedDevice = useAppSelector(selectSelectedDevice);
 
   const form = useForm<Settings>({
     defaultValues: () => getSettings(selectedDevice).unwrap(),

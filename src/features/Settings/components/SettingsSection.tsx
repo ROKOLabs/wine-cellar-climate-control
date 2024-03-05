@@ -12,15 +12,16 @@ import { IconMoon, IconTool, IconExclamationCircle } from '@tabler/icons-react';
 import { useDevToolsOpen } from 'components/DevTools/hooks/useDevToolsOpen';
 import { toggleDevTools } from 'components/DevTools/provider/DevToolsSlice';
 import {
+  selectShowErrors,
   toggleDarkTheme,
   toggleShowErrors,
-} from 'features/Settings/SettingsSlice';
-import { useAppDispatch } from 'store/hooks';
+} from 'features/Settings/settingsSlice';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 
 export const SettingsSection = () => {
   const showDevTools = useDevToolsOpen();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  const showErrors = true;
+  const showErrors = useAppSelector(selectShowErrors);
   const isDarkTheme = colorScheme === 'dark';
   const dispatch = useAppDispatch();
 
