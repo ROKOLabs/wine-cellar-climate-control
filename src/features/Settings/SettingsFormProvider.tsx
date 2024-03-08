@@ -26,12 +26,8 @@ export const SettingsFormProvider = ({ children }: PropsWithChildren) => {
   });
 
   useEffect(() => {
-    getSettings(selectedDevice)
-      .unwrap()
-      .then((settings) => {
-        form.reset(settings);
-      });
-  }, [selectedDevice, getSettings, form]);
+    getSettings(selectedDevice).unwrap().then(form.reset);
+  }, [selectedDevice, getSettings, form.reset]);
 
   const onSubmit = (settings: Settings) => {
     setSettings({ arduinoId: selectedDevice, settings })
