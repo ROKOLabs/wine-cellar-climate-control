@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
 import { SettingsSchema } from './settingsFormValidation';
@@ -24,6 +24,14 @@ export const SettingsFormProvider = ({ children }: PropsWithChildren) => {
     defaultValues: () => getSettings(selectedDevice).unwrap(),
     resolver: zodResolver(SettingsSchema),
   });
+
+  useEffect(() => {
+    getSettings(selectedDevice)
+      .unwrap()
+      .then((settings) => {
+        form.reset(settings);
+      });
+  }, [selectedDevice, getSettings, form]);
 
   const onSubmit = (settings: Settings) => {
     setSettings({ arduinoId: selectedDevice, settings })
