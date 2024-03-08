@@ -1,4 +1,5 @@
 import 'theme/styles.css';
+import { DevTools } from 'components/DevTools';
 import { AuthProvider } from 'features/auth/AuthProvider';
 import { DbProvider } from 'features/db/DbProvider';
 import { Router } from 'router/Router';
@@ -11,6 +12,7 @@ const App = () => (
       <AuthProvider>
         <ThemeProvider>
           <Router />
+          <DevTools />
         </ThemeProvider>
       </AuthProvider>
     </DbProvider>

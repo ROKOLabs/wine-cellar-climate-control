@@ -1,11 +1,15 @@
 import { Box, Button, Group, Stack, Text } from '@mantine/core';
 
+import { useDevToolsOpen } from 'components/DevTools/hooks/useDevToolsOpen';
 import {
   useLoginMutation,
   useLogoutMutation,
   useRegisterMutation,
 } from 'features/auth/authApi';
-import { useAddSensorDataMutation } from 'features/db/dbApi';
+import {
+  useAddSensorDataMutation,
+  useSetSettingsMutation,
+} from 'features/db/dbApi';
 import { tapX } from 'utility/fp/tapX';
 
 const REGISTRATION_DATA = {
@@ -23,12 +27,32 @@ const LOGIN_DATA = {
 
 const randomNum = (n: number) => Math.floor(Math.random() * n);
 
-export const DevTools = () => {
+const DevTools = () => {
   const [register, { isLoading: isRegisterLoading }] = useRegisterMutation();
   const [logout, { isLoading: isLogoutLoading }] = useLogoutMutation();
   const [login, { isLoading: isLoginLoading }] = useLoginMutation();
   const [addDataMutation, { isLoading: isAddDataLoading }] =
     useAddSensorDataMutation();
+  const [setSettingsMutation, { isLoading: isSetSettingsLoading }] =
+    useSetSettingsMutation();
+  const isDevToolsOpen = useDevToolsOpen();
+
+  if (!isDevToolsOpen) {
+    return null;
+  }
+
+  const setSettings = () =>
+    setSettingsMutation({
+      arduinoId: '1',
+      settings: {
+        led: randomNum(2),
+        fan: randomNum(2),
+        updateInterval: randomNum(100),
+        co2: { min: randomNum(100), max: randomNum(100) },
+        humidity: { min: randomNum(100), max: randomNum(100) },
+        temperature: { min: randomNum(100), max: randomNum(100) },
+      },
+    }).catch(tapX('set settings error'));
 
   const handleRegister = () =>
     register(REGISTRATION_DATA)
@@ -57,8 +81,10 @@ export const DevTools = () => {
   return (
     <Box
       style={{
-        padding: 16,
+        maxWidth: 260,
+        zIndex: 9999,
         position: 'fixed',
+        padding: 16,
         right: 32,
         bottom: 32,
         border: 'solid 1px red',
@@ -90,11 +116,25 @@ export const DevTools = () => {
           >
             Logout
           </Button>
+          <Button
+            size="compact-sm"
+            loading={isAddDataLoading}
+            onClick={addData}
+          >
+            Add Data
+          </Button>
+          <Button
+            size="compact-sm"
+            loading={isSetSettingsLoading}
+            onClick={setSettings}
+          >
+            Set Settings
+          </Button>
         </Group>
-        <Button size="compact-sm" loading={isAddDataLoading} onClick={addData}>
-          Add Sensor Data
-        </Button>
       </Stack>
     </Box>
   );
 };
+
+// eslint-disable-next-line import/no-default-export
+export default DevTools;

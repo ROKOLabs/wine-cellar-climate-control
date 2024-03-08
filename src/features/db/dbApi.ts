@@ -3,10 +3,16 @@ import type { Unsubscribe } from 'firebase/firestore';
 
 import {
   DbService,
+  GetSensorDataRangeArg,
+  GetSensorDataRangeResponse,
+  GetSettingsArg,
+  GetSettingsResponse,
   GetUserDetailsArg,
   GetUserDetailsResponse,
   SensorData,
   SensorDataWithDate,
+  SetSettingsArg,
+  SetSettingsResponse,
   SetUserDetailsArg,
   SetUserDetailsResponse,
 } from 'features/db/DbService';
@@ -17,6 +23,7 @@ const formatError = <T>(data: T) => ({ error: jsonSafeParse(data) });
 
 const dbTags = {
   UserDetails: 'UserDetails',
+  Settings: 'Settings',
 };
 
 export const dbApi = createApi({
@@ -36,18 +43,18 @@ export const dbApi = createApi({
     setUserDetails: builder.mutation<SetUserDetailsResponse, SetUserDetailsArg>(
       {
         invalidatesTags: [dbTags.UserDetails],
-        queryFn: (user) =>
+        queryFn: (queryArg) =>
           DbService.getInstance()
-            .setUserDetails(user)
+            .setUserDetails(queryArg)
             .then(formatData)
             .catch(formatError),
       },
     ),
 
     addSensorData: builder.mutation<SensorData, SensorDataWithDate>({
-      queryFn: (data) =>
+      queryFn: (queryArg) =>
         DbService.getInstance()
-          .addSensorData(data)
+          .addSensorData(queryArg)
           .then(formatData)
           .catch(formatError),
     }),
@@ -77,6 +84,35 @@ export const dbApi = createApi({
         unsubscribe?.();
       },
     }),
+
+    getSettings: builder.query<GetSettingsResponse, GetSettingsArg>({
+      providesTags: [dbTags.Settings],
+      queryFn: (queryArg) =>
+        DbService.getInstance()
+          .getSettings(queryArg)
+          .then(formatData)
+          .catch(formatError),
+    }),
+
+    setSettings: builder.mutation<SetSettingsResponse, SetSettingsArg>({
+      invalidatesTags: [dbTags.Settings],
+      queryFn: (queryArg) =>
+        DbService.getInstance()
+          .setSettings(queryArg)
+          .then(formatData)
+          .catch(formatError),
+    }),
+
+    getSensorDataRange: builder.query<
+      GetSensorDataRangeResponse,
+      GetSensorDataRangeArg
+    >({
+      queryFn: (queryArg) =>
+        DbService.getInstance()
+          .getSensorDataRange(queryArg)
+          .then(formatData)
+          .catch(formatError),
+    }),
   }),
 });
 
@@ -85,6 +121,10 @@ export const {
   useSetUserDetailsMutation,
   useAddSensorDataMutation,
   useGetSensorDataQuery,
+  useGetSettingsQuery,
+  useLazyGetSettingsQuery,
+  useSetSettingsMutation,
+  useLazyGetSensorDataRangeQuery,
 } = dbApi;
 
 export const useLazyGetUserDetailsQuerySubscription =

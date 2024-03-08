@@ -1,4 +1,8 @@
-import type { DocumentData, Timestamp } from 'firebase/firestore';
+import type {
+  DocumentData,
+  QueryDocumentSnapshot,
+  Timestamp,
+} from 'firebase/firestore';
 import {
   getFirestore,
   collection,
@@ -27,10 +31,22 @@ export type User = {
   username: string;
 };
 
+type UTCString = string;
+
 export type GetUserDetailsResponse = User | undefined;
 export type GetUserDetailsArg = string;
 export type SetUserDetailsArg = Partial<User> & { uid: string };
 export type SetUserDetailsResponse = void;
+export type GetSettingsResponse = Settings;
+export type GetSettingsArg = string;
+export type SetSettingsResponse = void;
+export type SetSettingsArg = { arduinoId: string; settings: Settings };
+export type GetSensorDataRangeArg = {
+  arduinoId: number;
+  from: UTCString;
+  to: UTCString;
+};
+export type GetSensorDataRangeResponse = SensorData[];
 
 export type SensorData = {
   arduino: number;
@@ -42,6 +58,16 @@ export type SensorData = {
 export type SensorDataWithDate = Omit<SensorData, 'date'> & { date: Date };
 type SensorDataWithTimestamp = Omit<SensorData, 'date'> & {
   date: Timestamp;
+};
+
+type SensorSettings = { min: number; max: number };
+export type Settings = {
+  led: number;
+  fan: number;
+  updateInterval: number;
+  co2: SensorSettings;
+  humidity: SensorSettings;
+  temperature: SensorSettings;
 };
 
 type RootCollection = 'users' | 'settings' | 'sensors';
@@ -77,6 +103,26 @@ export class DbService {
   }
 
   /**
+   * Converts a Firestore document to a SensorData object.
+   * @param doc - The Firestore document to convert.
+   * @returns - The SensorData object.
+   */
+  #getSensorDataWithTimestamp(doc: QueryDocumentSnapshot) {
+    const data = doc.data() as SensorDataWithTimestamp;
+    const date = data.date.seconds * 1000; // Convert date to milliseconds
+    return { ...data, date };
+  }
+
+  /**
+   * Handles and throws an error.
+   * @param error - The error to handle and throw.
+   */
+  #handleAndThrowError = (error: Error) => {
+    console.error('DbService error:', error);
+    throw error;
+  };
+
+  /**
    * Checks if the given username is already taken.
    * @param {string} username - The username to check.
    * @returns {Promise<boolean>} - True if username is taken, false otherwise.
@@ -84,7 +130,9 @@ export class DbService {
   public isUsernameTaken = (username: string) => {
     const collectionRef = this.#getCollRef('users');
     const userQuery = query(collectionRef, where('username', '==', username));
-    return getDocs(userQuery).then(isSnapshotNotEmpty);
+    return getDocs(userQuery)
+      .then(isSnapshotNotEmpty)
+      .catch(this.#handleAndThrowError);
   };
 
   /**
@@ -96,7 +144,9 @@ export class DbService {
     const userDocRef = this.#getDocRef(`users/${uid}`);
 
     // TODO: Verify user details retrieved
-    return getDoc(userDocRef).then(getSnapshotData<User>);
+    return getDoc(userDocRef)
+      .then(getSnapshotData<User>)
+      .catch(this.#handleAndThrowError);
   };
 
   /**
@@ -106,7 +156,7 @@ export class DbService {
    */
   public setUserDetails = ({ uid, ...details }: SetUserDetailsArg) => {
     const userDocRef = this.#getDocRef(`users/${uid}`);
-    return setDoc(userDocRef, details);
+    return setDoc(userDocRef, details).catch(this.#handleAndThrowError);
   };
 
   /**
@@ -125,12 +175,9 @@ export class DbService {
       q,
       (snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          if (change.type === 'added') {
-            const data = change.doc.data() as SensorDataWithTimestamp;
-            // Convert date to milliseconds
-            const date = data.date.seconds * 1000;
-            listener({ ...data, date });
-          }
+          if (change.type !== 'added') return;
+          const sensorData = this.#getSensorDataWithTimestamp(change.doc);
+          listener(sensorData);
         });
       },
       (error) => {
@@ -146,6 +193,47 @@ export class DbService {
    */
   addSensorData(data: SensorDataWithDate) {
     const collRef = this.#getCollRef('sensors');
-    return addDoc(collRef, data);
+    return addDoc(collRef, data).catch(this.#handleAndThrowError);
   }
+
+  /**
+   * Get settings for a given Arduino ID.
+   * @param arduinoId The Arduino ID to get settings for.
+   * @returns A promise that resolves with the settings object.
+   */
+  getSettings = (arduinoId: string) => {
+    const settingsDocRef = this.#getDocRef(`settings/${arduinoId}`);
+    return getDoc(settingsDocRef)
+      .then(getSnapshotData<Settings>)
+      .catch(this.#handleAndThrowError);
+  };
+
+  /**
+   * Set settings for a given Arduino ID.
+   * @param arduinoId The Arduino ID to set settings for.
+   * @param settings The settings object to set.
+   * @returns A promise that resolves when the settings are set.
+   */
+  setSettings = ({ arduinoId, settings }: SetSettingsArg) => {
+    const settingsDocRef = this.#getDocRef(`settings/${arduinoId}`);
+    return setDoc(settingsDocRef, settings).catch(this.#handleAndThrowError);
+  };
+
+  /**
+   * Get sensor data for a given Arduino ID.
+   * @param arduinoId The Arduino ID to get sensor data for.
+   * @returns A promise that resolves with the sensor data.
+   */
+  getSensorDataRange = ({ arduinoId, from, to }: GetSensorDataRangeArg) => {
+    const q = query(
+      this.#getCollRef('sensors'),
+      where('arduino', '==', arduinoId),
+      where('date', '>=', new Date(from)),
+      where('date', '<', new Date(to)),
+    );
+
+    return getDocs(q)
+      .then((snapshot) => snapshot.docs.map(this.#getSensorDataWithTimestamp))
+      .catch(this.#handleAndThrowError);
+  };
 }
