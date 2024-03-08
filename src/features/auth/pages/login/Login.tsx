@@ -11,6 +11,10 @@ export const Login = () => {
     navigate(routes.register);
   };
 
+  const navigateToForgotPassword = () => {
+    navigate(routes.forgotPassword);
+  };
+
   return (
     <Stack h="100%" justify="center" align="center">
       <Title ta="center">Wine Cellar Climate Control</Title>
@@ -23,6 +27,12 @@ export const Login = () => {
       </Text>
 
       <LoginForm />
+      <Text ta="center" size="sm" c="dimmed" mt="xs">
+        Forgot your password?{' '}
+        <Anchor component="button" size="sm" onClick={navigateToForgotPassword}>
+          Reset it
+        </Anchor>
+      </Text>
     </Stack>
   );
 };

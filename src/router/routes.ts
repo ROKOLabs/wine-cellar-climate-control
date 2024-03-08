@@ -4,6 +4,7 @@ import { RouteTransition } from 'components/RouteTransition/RouteTransition';
 import { History } from 'features/History/History';
 import { Settings } from 'features/Settings/Settings';
 import { AuthGuard } from 'features/auth/components/AuthGuard';
+import { ForgotPassword } from 'features/auth/pages/forgotPassword/ForgotPassword';
 import { Login } from 'features/auth/pages/login/Login';
 import { Register } from 'features/auth/pages/register/Register';
 import { Dashboard } from 'features/dashboard/Dashboard';
@@ -17,6 +18,7 @@ export const routes = {
   dashboard: '/dashboard',
   settings: '/settings',
   history: '/history',
+  forgotPassword: '/forgot-password',
 };
 
 export const router = createBrowserRouter([
@@ -45,6 +47,10 @@ export const router = createBrowserRouter([
                   // Public routes
                   { path: routes.login, Component: Login },
                   { path: routes.register, Component: Register },
+                  {
+                    path: routes.forgotPassword,
+                    Component: ForgotPassword,
+                  },
                 ],
               },
             ],
