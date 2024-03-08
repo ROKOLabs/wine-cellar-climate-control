@@ -5,7 +5,7 @@ import {
   SettingsState,
   selectSelectedDevice,
   setSelectedDevice,
-} from 'features/Settings/settingsSlice';
+} from 'features/Settings/settingsSlice2';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 
 export const DeviceSection = () => {

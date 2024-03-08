@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import { devToolsSliceReducer } from 'components/DevTools/provider/DevToolsSlice';
-import { settingsSliceReducer } from 'features/Settings/settingsSlice';
+import { settingsSliceReducer } from 'features/Settings/settingsSlice2';
 import { authApi } from 'features/auth/authApi';
 import { dbApi } from 'features/db/dbApi';
 
