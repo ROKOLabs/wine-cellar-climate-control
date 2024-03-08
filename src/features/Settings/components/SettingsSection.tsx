@@ -15,7 +15,7 @@ import {
   selectShowErrors,
   toggleDarkTheme,
   toggleShowErrors,
-} from 'features/Settings/settingsSlice2';
+} from 'features/Settings/settingsSlice';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 
 export const SettingsSection = () => {

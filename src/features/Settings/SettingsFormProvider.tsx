@@ -5,7 +5,7 @@ import { PropsWithChildren, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
 import { SettingsSchema } from './settingsFormValidation';
-import { selectSelectedDevice } from './settingsSlice2';
+import { selectSelectedDevice } from './settingsSlice';
 
 import { FormDevTools } from 'components/FormDevTools';
 import { Settings } from 'features/db/DbService';
