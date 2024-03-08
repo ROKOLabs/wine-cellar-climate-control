@@ -1,6 +1,6 @@
 import { DonutChart, DonutChartCell, AreaChart } from '@mantine/charts';
 import { Group, Paper, Stack, Text, Title } from '@mantine/core';
-import { format } from 'date-fns';
+import dayjs from 'dayjs';
 import maxBy from 'lodash/fp/maxBy';
 import minBy from 'lodash/fp/minBy';
 
@@ -107,7 +107,7 @@ export const SensorData = ({
           dataKey="date"
           series={[{ name: 'value', color: areaColor }]}
           xAxisProps={{
-            tickFormatter: (value) => format(value, 'd.MMM HH:mm'),
+            tickFormatter: (value) => dayjs(value).format('D.MMM HH:mm'),
           }}
           yAxisProps={{ width: 40, domain: [yMin, yMax] }}
           unit={displayUnit}
