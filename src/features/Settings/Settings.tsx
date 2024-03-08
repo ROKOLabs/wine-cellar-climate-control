@@ -1,16 +1,23 @@
-import { Container, Title } from '@mantine/core';
+import { Container, Stack } from '@mantine/core';
 
-import { useGetSettingsQuery } from 'features/db/dbApi';
+import { ControlSection } from './components/ControlSection';
+import { DeviceSection } from './components/DeviceSection';
+import { SensorsSection } from './components/SensorsSection';
+import { SettingsSection } from './components/SettingsSection';
 
-const ARDUINO_ID = '1';
+import { SettingsFormProvider } from 'features/Settings/SettingsFormProvider';
 
 export const Settings = () => {
-  const { data } = useGetSettingsQuery(ARDUINO_ID);
-
   return (
-    <Container size="xl">
-      <Title>Settings Page</Title>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+    <Container size="xs" pos="relative">
+      <SettingsFormProvider>
+        <Stack>
+          <SettingsSection />
+          <DeviceSection />
+          <ControlSection />
+          <SensorsSection />
+        </Stack>
+      </SettingsFormProvider>
     </Container>
   );
 };

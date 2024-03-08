@@ -1,5 +1,6 @@
 import { Box, Button, Group, Stack, Text } from '@mantine/core';
 
+import { useDevToolsOpen } from 'components/DevTools/hooks/useDevToolsOpen';
 import {
   useLoginMutation,
   useLogoutMutation,
@@ -34,6 +35,11 @@ const DevTools = () => {
     useAddSensorDataMutation();
   const [setSettingsMutation, { isLoading: isSetSettingsLoading }] =
     useSetSettingsMutation();
+  const isDevToolsOpen = useDevToolsOpen();
+
+  if (!isDevToolsOpen) {
+    return null;
+  }
 
   const setSettings = () =>
     setSettingsMutation({

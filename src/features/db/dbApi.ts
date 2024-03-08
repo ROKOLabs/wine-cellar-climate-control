@@ -122,6 +122,7 @@ export const {
   useAddSensorDataMutation,
   useGetSensorDataQuery,
   useGetSettingsQuery,
+  useLazyGetSettingsQuery,
   useSetSettingsMutation,
   useLazyGetSensorDataRangeQuery,
 } = dbApi;
