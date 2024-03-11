@@ -8,6 +8,8 @@ import {
 } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 
+import { SendPasswordResetEmailArgs } from './authApi';
+
 import { app } from 'firebase/firebase';
 
 export class AuthService {
@@ -71,7 +73,7 @@ export class AuthService {
     return signOut(this.#auth);
   };
 
-  sendPasswordResetEmail = ({ email }: { email: string }) => {
+  sendPasswordResetEmail = ({ email }: SendPasswordResetEmailArgs) => {
     return sendPasswordResetEmail(this.#auth, email);
   };
 }

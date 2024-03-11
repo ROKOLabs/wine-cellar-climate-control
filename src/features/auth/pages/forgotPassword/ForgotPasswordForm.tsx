@@ -1,53 +1,66 @@
-import { Paper, TextInput, Button } from '@mantine/core';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Paper, Button } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
-import { AuthService } from 'features/auth/AuthService';
+import { FormTextInput } from 'components/FormTextInput';
+import { usePasswordResetEmailMutation } from 'features/auth/authApi';
+import { ForgotPasswordSchema } from 'features/auth/pages/config';
+import { routes } from 'router/routes';
+import { navigate } from 'router/utility/navigate';
 
-type ForgotPasswordFormData = {
+export type ForgotPasswordFormData = {
   email: string;
 };
 
 export const ForgotPasswordForm = () => {
-  const { control, handleSubmit } = useForm<ForgotPasswordFormData>({
+  const [sendPasswordResetEmail, { isLoading }] =
+    usePasswordResetEmailMutation();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ForgotPasswordFormData>({
+    resolver: zodResolver(ForgotPasswordSchema),
     defaultValues: {
       email: '',
     },
   });
-  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
-    setIsLoading(true);
-    const authService = AuthService.getInstance();
-    authService
-      .sendPasswordResetEmail({ email: data.email })
+    await sendPasswordResetEmail({ email: data.email })
+      .unwrap()
       .then(() => {
         notifications.show({
           title: 'Success',
           message: 'Please check your email to reset your password.',
           color: 'green',
         });
+        navigate(routes.login);
       })
       .catch((error) => {
+        let errorMessage = 'An error occurred, please try again.';
+        if (error.code === 'auth/user-not-found') {
+          errorMessage =
+            'No user found with this email address. Please check and try again.';
+        }
         notifications.show({
           title: 'Error',
-          message: error.message,
+          message: errorMessage,
           color: 'red',
         });
-      })
-      .finally(() => setIsLoading(false));
+      });
   };
 
   return (
     <Paper withBorder shadow="md" p="xl" radius="md" maw={520} w="100%">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Controller
+        <FormTextInput
           name="email"
           control={control}
-          render={({ field }) => (
-            <TextInput {...field} label="Email" withAsterisk />
-          )}
+          label="Email"
+          withAsterisk
+          error={errors.email?.message}
         />
         <Button type="submit" fullWidth mt="xl" loading={isLoading}>
           Send reset link
