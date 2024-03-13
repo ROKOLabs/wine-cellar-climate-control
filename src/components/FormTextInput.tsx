@@ -1,33 +1,29 @@
 import { TextInput } from '@mantine/core';
-import { Control, Controller } from 'react-hook-form';
+import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 
-import { ForgotPasswordFormData } from 'features/auth/pages/forgotPassword/ForgotPasswordForm';
-
-type FormTextInputProps = {
-  name: keyof ForgotPasswordFormData;
+type FormTextInputProps<T extends FieldValues> = {
+  name: Path<T>;
   label: string;
-  control: Control<ForgotPasswordFormData>;
-  error?: string;
+  control: Control<T>;
   withAsterisk?: boolean;
 };
 
-export const FormTextInput = ({
+export const FormTextInput = <T extends FieldValues>({
   name,
   label,
   control,
-  error,
   withAsterisk = false,
-}: FormTextInputProps) => {
+}: FormTextInputProps<T>) => {
   return (
     <Controller
       name={name}
       control={control}
-      render={({ field }) => (
+      render={({ field, fieldState: { error } }) => (
         <TextInput
           {...field}
           label={label}
           withAsterisk={withAsterisk}
-          error={error}
+          error={error?.message}
         />
       )}
     />

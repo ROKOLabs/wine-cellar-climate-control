@@ -6,7 +6,7 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { useLoginMutation } from 'features/auth/authApi';
-import { LoginSchema } from 'features/auth/pages/config';
+import { LoginSchema } from 'features/auth/pages/validation';
 import { routes } from 'router/routes';
 
 interface ILoginForm {

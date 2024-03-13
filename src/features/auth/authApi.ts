@@ -5,7 +5,8 @@ import { AuthService } from 'features/auth/AuthService';
 import { ExtractPromise } from 'types';
 import { jsonSafeParse } from 'utility/jsonSafeParse';
 
-export type SendPasswordResetEmailArgs = { email: string };
+export type ResetPasswordArgs = { email: string };
+type ResetPasswordResponse = void;
 
 type RegisterArg = Parameters<AuthService['register']>[0];
 type RegisterResponse = ExtractPromise<ReturnType<AuthService['register']>>;
@@ -76,11 +77,11 @@ export const authApi = createApi({
       },
     }),
 
-    passwordResetEmail: builder.mutation<void, SendPasswordResetEmailArgs>({
+    resetPassword: builder.mutation<ResetPasswordResponse, ResetPasswordArgs>({
       queryFn: (queryArg) =>
         AuthService.getInstance()
-          .sendPasswordResetEmail(queryArg)
-          .then(() => ({ data: undefined }))
+          .resetPassword(queryArg)
+          .then(formatData)
           .catch(formatError),
     }),
   }),
@@ -91,5 +92,5 @@ export const {
   useLoginMutation,
   useLogoutMutation,
   useGetAuthStateQuery,
-  usePasswordResetEmailMutation,
+  useResetPasswordMutation,
 } = authApi;
