@@ -3,6 +3,7 @@ import { Paper, Button } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useForm } from 'react-hook-form';
 
+import { FormDevTools } from 'components/FormDevTools';
 import { FormTextInput } from 'components/FormTextInput';
 import { useResetPasswordMutation } from 'features/auth/authApi';
 import { ResetPasswordSchema } from 'features/auth/pages/validation';
@@ -61,6 +62,7 @@ export const ResetPasswordForm = () => {
           Send reset link
         </Button>
       </form>
+      <FormDevTools control={control} />
     </Paper>
   );
 };

@@ -1,31 +1,41 @@
-import { TextInput } from '@mantine/core';
-import { Control, Controller, FieldValues, Path } from 'react-hook-form';
+import {
+  TextInput as MantineTextInput,
+  TextInputProps as MantineTextInputProps,
+} from '@mantine/core';
+import { UseControllerProps, useController } from 'react-hook-form';
 
-type FormTextInputProps<T extends FieldValues> = {
-  name: Path<T>;
-  label: string;
-  control: Control<T>;
-  withAsterisk?: boolean;
-};
+export type TextInputProps<T extends Record<string, unknown>> =
+  UseControllerProps<T> & Omit<MantineTextInputProps, 'value' | 'defaultValue'>;
 
-export const FormTextInput = <T extends FieldValues>({
+export const FormTextInput = <T extends Record<string, unknown>>({
   name,
-  label,
   control,
-  withAsterisk = false,
-}: FormTextInputProps<T>) => {
+  defaultValue,
+  rules,
+  shouldUnregister,
+  onChange,
+  ...props
+}: TextInputProps<T>) => {
+  const {
+    field: { value, onChange: fieldOnChange },
+    fieldState,
+  } = useController<T>({
+    name,
+    control,
+    defaultValue,
+    rules,
+    shouldUnregister,
+  });
+
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field, fieldState: { error } }) => (
-        <TextInput
-          {...field}
-          label={label}
-          withAsterisk={withAsterisk}
-          error={error?.message}
-        />
-      )}
+    <MantineTextInput
+      value={value as number | string}
+      onChange={(e) => {
+        fieldOnChange(e);
+        onChange?.(e);
+      }}
+      error={fieldState.error?.message}
+      {...props}
     />
   );
 };
