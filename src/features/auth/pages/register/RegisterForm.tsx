@@ -4,7 +4,7 @@ import { notifications } from '@mantine/notifications';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 
 import { useRegisterMutation } from 'features/auth/authApi';
-import { RegisterSchema } from 'features/auth/pages/config';
+import { RegisterSchema } from 'features/auth/pages/validation';
 import { useSetUserDetailsMutation } from 'features/db/dbApi';
 
 interface IRegisterForm {

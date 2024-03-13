@@ -4,6 +4,7 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 
@@ -68,5 +69,9 @@ export class AuthService {
 
   logout = () => {
     return signOut(this.#auth);
+  };
+
+  resetPassword = ({ email }: { email: string }) => {
+    return sendPasswordResetEmail(this.#auth, email);
   };
 }
