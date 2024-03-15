@@ -1,6 +1,7 @@
-import { Button, Container, Title } from '@mantine/core';
+import { Container, Title, Group, Button } from '@mantine/core';
 import { DateValue } from '@mantine/dates';
 import { notifications } from '@mantine/notifications';
+import dayjs from 'dayjs';
 import { useState } from 'react';
 
 import { DateRangePicker } from 'features/History/components/DateRangePicker/DateRangePicker';
@@ -13,7 +14,7 @@ export const History = () => {
   const arduinoId = 0;
 
   const [from, setFrom] = useState<string>(() =>
-    new Date('2019-01-01').toUTCString(),
+    dayjs().subtract(1, 'month').toDate().toUTCString(),
   );
   const onChangeFrom = useEventCallback((payload: DateValue) => {
     setFrom(payload!.toUTCString());
@@ -44,15 +45,17 @@ export const History = () => {
   return (
     <Container size="xl">
       <Title>History Page</Title>
-      <Button loading={isLoading} onClick={handleGetData}>
-        Get sensor data
-      </Button>
-      <DateRangePicker
-        from={new Date(from)}
-        onChangeFrom={onChangeFrom}
-        to={new Date(to)}
-        onChangeTo={onChangeTo}
-      />
+      <Group align="flex-end" mt="xl">
+        <DateRangePicker
+          from={new Date(from)}
+          onChangeFrom={onChangeFrom}
+          to={new Date(to)}
+          onChangeTo={onChangeTo}
+        />
+        <Button loading={isLoading} onClick={handleGetData}>
+          Get sensor data
+        </Button>
+      </Group>
     </Container>
   );
 };
