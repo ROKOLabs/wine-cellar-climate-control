@@ -5,11 +5,12 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 
 import { DateRangePicker } from 'features/History/components/DateRangePicker/DateRangePicker';
+import { Graph } from 'features/History/components/Graph/Graph';
 import { useLazyGetSensorDataRangeQuery } from 'features/db/dbApi';
 import { useEventCallback } from 'hooks/useEventCallback';
 
 export const History = () => {
-  const [getData, { isLoading }] = useLazyGetSensorDataRangeQuery();
+  const [getData, { isLoading, data }] = useLazyGetSensorDataRangeQuery();
 
   const arduinoId = 0;
 
@@ -56,6 +57,13 @@ export const History = () => {
           Get sensor data
         </Button>
       </Group>
+      {data && (
+        <Graph
+          data={data}
+          from={dayjs(from).format('DD/MM/YYYY')}
+          to={dayjs(to).format('DD/MM/YYYY')}
+        />
+      )}
     </Container>
   );
 };
