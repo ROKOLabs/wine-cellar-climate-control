@@ -6,6 +6,7 @@ import { Settings } from 'features/Settings/Settings';
 import { AuthGuard } from 'features/auth/components/AuthGuard';
 import { Login } from 'features/auth/pages/login/Login';
 import { Register } from 'features/auth/pages/register/Register';
+import { ResetPassword } from 'features/auth/pages/resetPassword/ResetPassword';
 import { Dashboard } from 'features/dashboard/Dashboard';
 import { Layout } from 'features/layout/Layout';
 import { protectedLoader } from 'router/loaders/protectedLoader';
@@ -17,6 +18,7 @@ export const routes = {
   dashboard: '/dashboard',
   settings: '/settings',
   history: '/history',
+  resetPassword: '/reset-password',
 };
 
 export const router = createBrowserRouter([
@@ -45,6 +47,10 @@ export const router = createBrowserRouter([
                   // Public routes
                   { path: routes.login, Component: Login },
                   { path: routes.register, Component: Register },
+                  {
+                    path: routes.resetPassword,
+                    Component: ResetPassword,
+                  },
                 ],
               },
             ],

@@ -30,3 +30,7 @@ export const LoginSchema = zod.object({
     .string()
     .min(6, { message: 'Password must contain at least 6 character(s)' }),
 });
+
+export const ResetPasswordSchema = zod.object({
+  email: zod.string().email({ message: 'Invalid email address' }),
+});
