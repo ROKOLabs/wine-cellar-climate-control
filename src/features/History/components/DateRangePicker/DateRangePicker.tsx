@@ -16,7 +16,7 @@ export const DateRangePicker = ({
   onChangeTo,
 }: Props) => {
   return (
-    <Group mt="xl">
+    <Group>
       <DateInput
         value={from}
         onChange={onChangeFrom}
