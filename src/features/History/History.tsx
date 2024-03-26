@@ -1,19 +1,17 @@
 import { Container, Group, Button } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 
 import { DateRangePicker } from 'features/History/components/DateRangePicker/DateRangePicker';
 import { Graph } from 'features/History/components/Graph/Graph';
 import { useLazyGetSensorDataRangeQuery } from 'features/db/dbApi';
+import { notification } from 'utility/notificationUtils';
 
 const handleError = () => {
-  notifications.show({
+  notification({
     title: 'Oops!',
     message: 'It seems something went wrong on our end. Please try again later',
-    color: 'red',
-    withBorder: true,
-    withCloseButton: false,
+    type: 'error',
   });
 };
 

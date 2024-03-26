@@ -6,7 +6,6 @@ import {
   Title,
   useMantineColorScheme,
 } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
 import { skipToken } from '@reduxjs/toolkit/query';
 import {
   IconGlassFullFilled,
@@ -23,6 +22,7 @@ import { useAuth } from 'features/auth/hooks/useAuth';
 import { useGetUserDetailsQuery } from 'features/db/dbApi';
 import { useSidebar } from 'features/layout/hooks/useSidebar';
 import { getUserInitials } from 'features/layout/utils/getUserInitials';
+import { notification } from 'utility/notificationUtils';
 
 export const Header = () => {
   const [isOpen, toggleSidebar] = useSidebar();
@@ -41,13 +41,11 @@ export const Header = () => {
     logout()
       .unwrap()
       .catch(() => {
-        notifications.show({
+        notification({
           title: 'Logout Error',
           message:
             'An error occurred while logging out. Please try again later.',
-          color: 'red',
-          withBorder: true,
-          withCloseButton: true,
+          type: 'error',
         });
       });
 
