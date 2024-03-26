@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Paper, Button } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
 import { useForm } from 'react-hook-form';
 
 import { FormDevTools } from 'components/FormDevTools';
@@ -9,6 +8,7 @@ import { useResetPasswordMutation } from 'features/auth/authApi';
 import { ResetPasswordSchema } from 'features/auth/pages/validation';
 import { routes } from 'router/routes';
 import { navigate } from 'router/utility/navigate';
+import { notification } from 'utility/notificationUtils';
 
 export type ResetPasswordFormData = {
   email: string;
@@ -28,10 +28,10 @@ export const ResetPasswordForm = () => {
     resetPassword({ email: data.email })
       .unwrap()
       .then(() => {
-        notifications.show({
+        notification({
           title: 'Success',
           message: 'Please check your email to reset your password.',
-          color: 'green',
+          type: 'success',
         });
         navigate(routes.login);
       })
@@ -41,10 +41,10 @@ export const ResetPasswordForm = () => {
           errorMessage =
             'No user found with this email address. Please check and try again.';
         }
-        notifications.show({
+        notification({
           title: 'Error',
           message: errorMessage,
-          color: 'red',
+          type: 'success',
         });
       });
   };

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from 'features/auth/authApi';
 import { LoginSchema } from 'features/auth/pages/validation';
 import { routes } from 'router/routes';
+import { notification } from 'utility/notificationUtils';
 
 interface ILoginForm {
   email: string;
@@ -54,12 +55,10 @@ export const LoginForm = () => {
           "User not found. Please check your credentials or sign up if you're new";
       }
     }
-    notifications.show({
+    notification({
       title: 'Oops!',
       message: err,
-      color: 'red',
-      withBorder: true,
-      withCloseButton: false,
+      type: 'error',
     });
   };
 
