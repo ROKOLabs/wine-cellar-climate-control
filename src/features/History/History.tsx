@@ -5,15 +5,7 @@ import { useState } from 'react';
 import { DateRangePicker } from 'features/History/components/DateRangePicker/DateRangePicker';
 import { Graph } from 'features/History/components/Graph/Graph';
 import { useLazyGetSensorDataRangeQuery } from 'features/db/dbApi';
-import { notification } from 'utility/notificationUtils';
-
-const handleError = () => {
-  notification({
-    title: 'Oops!',
-    message: 'It seems something went wrong on our end. Please try again later',
-    type: 'error',
-  });
-};
+import { errorNotificationCurried } from 'utility/notificationUtils';
 
 // TODO: Replace with actual arduino id from the store
 const arduinoId = 0;
@@ -25,7 +17,15 @@ export const History = () => {
   const [getData, { isLoading, data = [] }] = useLazyGetSensorDataRangeQuery();
 
   const handleGetData = () =>
-    getData({ arduinoId, from, to }).unwrap().catch(handleError);
+    getData({ arduinoId, from, to })
+      .unwrap()
+      .catch(
+        errorNotificationCurried({
+          title: "Couldn't get sensor data",
+          message:
+            'It seems something went wrong on our end. Please try again later',
+        }),
+      );
 
   return (
     <Container size="xl">

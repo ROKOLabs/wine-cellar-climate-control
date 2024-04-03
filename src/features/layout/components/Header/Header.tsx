@@ -22,7 +22,7 @@ import { useAuth } from 'features/auth/hooks/useAuth';
 import { useGetUserDetailsQuery } from 'features/db/dbApi';
 import { useSidebar } from 'features/layout/hooks/useSidebar';
 import { getUserInitials } from 'features/layout/utils/getUserInitials';
-import { notification } from 'utility/notificationUtils';
+import { errorNotificationCurried } from 'utility/notificationUtils';
 
 export const Header = () => {
   const [isOpen, toggleSidebar] = useSidebar();
@@ -40,14 +40,13 @@ export const Header = () => {
   const handleLogout = () =>
     logout()
       .unwrap()
-      .catch(() => {
-        notification({
+      .catch(
+        errorNotificationCurried({
           title: 'Logout Error',
           message:
             'An error occurred while logging out. Please try again later.',
-          type: 'error',
-        });
-      });
+        }),
+      );
 
   return (
     <Group gap="xs" px="md" h="100%" justify="space-between">

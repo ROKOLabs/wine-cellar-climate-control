@@ -13,7 +13,10 @@ import {
   useSetSettingsMutation,
 } from 'features/db/dbApi';
 import { useAppSelector } from 'store/hooks';
-import { notification } from 'utility/notificationUtils';
+import {
+  errorNotificationCurried,
+  successNotificationCurried,
+} from 'utility/notificationUtils';
 
 export const SettingsFormProvider = ({ children }: PropsWithChildren) => {
   const [getSettings] = useLazyGetSettingsQuery();
@@ -32,20 +35,19 @@ export const SettingsFormProvider = ({ children }: PropsWithChildren) => {
   const onSubmit = (settings: Settings) => {
     setSettings({ arduinoId: selectedDevice, settings })
       .unwrap()
-      .then(() => {
-        notification({
-          title: 'Congratulations!',
+      .then(
+        successNotificationCurried({
+          title: 'Settings saved',
           message: 'Settings saved successfully!',
-          type: 'success',
-        });
-      })
-      .catch((error) => {
-        notification({
-          title: 'Error saving settings:',
-          message: error,
-          type: 'error',
-        });
-      });
+        }),
+      )
+      .catch(
+        errorNotificationCurried({
+          title: 'Settings save error',
+          message:
+            'It seems something went wrong on our end. Please try again later',
+        }),
+      );
   };
 
   return (

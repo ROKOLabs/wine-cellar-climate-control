@@ -8,7 +8,10 @@ import { useResetPasswordMutation } from 'features/auth/authApi';
 import { ResetPasswordSchema } from 'features/auth/pages/validation';
 import { routes } from 'router/routes';
 import { navigate } from 'router/utility/navigate';
-import { notification } from 'utility/notificationUtils';
+import {
+  errorNotification,
+  successNotification,
+} from 'utility/notificationUtils';
 
 export type ResetPasswordFormData = {
   email: string;
@@ -28,24 +31,19 @@ export const ResetPasswordForm = () => {
     resetPassword({ email: data.email })
       .unwrap()
       .then(() => {
-        notification({
-          title: 'Success',
+        successNotification({
+          title: 'Reset Password',
           message: 'Please check your email to reset your password.',
-          type: 'success',
         });
         navigate(routes.login);
       })
       .catch((error) => {
-        let errorMessage = 'An error occurred, please try again.';
-        if (error?.code === 'auth/user-not-found') {
-          errorMessage =
-            'No user found with this email address. Please check and try again.';
-        }
-        notification({
-          title: 'Error',
-          message: errorMessage,
-          type: 'success',
-        });
+        const message =
+          error?.code === 'auth/user-not-found'
+            ? 'No user found with this email address. Please check and try again.'
+            : 'An error occurred, please try again.';
+
+        errorNotification({ title: 'Reset Password Error', message });
       });
   };
 

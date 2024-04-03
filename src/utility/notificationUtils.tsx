@@ -2,21 +2,52 @@ import { showNotification } from '@mantine/notifications';
 import { IconCheck, IconX } from '@tabler/icons-react';
 
 type NotificationOptions = {
-  message: string;
   title?: string;
-  type: 'success' | 'error';
+  message?: string;
 };
 
-export const notification = ({ message, title, type }: NotificationOptions) => {
+interface ErrorNotificationProps extends NotificationOptions {
+  error?: unknown;
+}
+
+const genericErrorMessage = 'An error occurred. Please try again later.';
+const genericSuccessMessage = 'Everything went well.';
+
+const parseErrorMessage = (error: unknown) =>
+  error instanceof Error
+    ? error.message
+    : typeof error === 'string'
+      ? error
+      : genericErrorMessage;
+
+export const errorNotification = ({
+  title = 'Error occurred',
+  message,
+  error,
+}: ErrorNotificationProps) => {
   showNotification({
     title,
-    message,
-    icon:
-      type === 'success' ? (
-        <IconCheck size={18} color="white" />
-      ) : (
-        <IconX size={18} color="white" />
-      ),
-    color: type === 'success' ? 'teal' : 'red',
+    message: message ?? parseErrorMessage(error),
+    icon: <IconX size="1.1rem" />,
+    color: 'red',
   });
 };
+
+export const errorNotificationCurried =
+  (props?: NotificationOptions) => (error?: unknown) => {
+    errorNotification({ ...props, error });
+  };
+
+export const successNotification = (props?: NotificationOptions) => {
+  showNotification({
+    title: props?.title ?? 'Success',
+    message: props?.message ?? genericSuccessMessage,
+    icon: <IconCheck size="1.1rem" />,
+    color: 'green',
+  });
+};
+
+export const successNotificationCurried =
+  (props?: NotificationOptions) => () => {
+    successNotification(props);
+  };
