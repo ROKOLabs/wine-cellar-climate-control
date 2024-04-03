@@ -6,6 +6,10 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { useRegisterMutation } from 'features/auth/authApi';
 import { RegisterSchema } from 'features/auth/pages/validation';
 import { useSetUserDetailsMutation } from 'features/db/dbApi';
+import {
+  errorNotification,
+  successNotification,
+} from 'utility/notificationUtils';
 
 interface IRegisterForm {
   name: string;
@@ -52,23 +56,16 @@ export const RegisterForm = () => {
         lastname,
         username,
       }).unwrap();
-      notifications.show({
-        title: 'Congratulations!',
+      successNotification({
+        title: "You're all set!",
         message:
           'Your account is all set up and you will now be redirected to the Login page',
-        color: 'green',
-        withBorder: true,
-        withCloseButton: false,
       });
     } catch (error) {
-      console.error('authService.register error...', error);
-      notifications.show({
-        title: 'Oops!',
+      errorNotification({
+        title: "We're sorry!",
         message:
           'It seems something went wrong on our end. Please try again later',
-        color: 'red',
-        withBorder: true,
-        withCloseButton: false,
       });
     }
   };

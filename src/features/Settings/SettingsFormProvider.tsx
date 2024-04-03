@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Group } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
 import { PropsWithChildren, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 
@@ -14,6 +13,10 @@ import {
   useSetSettingsMutation,
 } from 'features/db/dbApi';
 import { useAppSelector } from 'store/hooks';
+import {
+  errorNotificationCurried,
+  successNotificationCurried,
+} from 'utility/notificationUtils';
 
 export const SettingsFormProvider = ({ children }: PropsWithChildren) => {
   const [getSettings] = useLazyGetSettingsQuery();
@@ -32,24 +35,19 @@ export const SettingsFormProvider = ({ children }: PropsWithChildren) => {
   const onSubmit = (settings: Settings) => {
     setSettings({ arduinoId: selectedDevice, settings })
       .unwrap()
-      .then(() => {
-        notifications.show({
-          title: 'Congratulations!',
+      .then(
+        successNotificationCurried({
+          title: 'Settings saved',
           message: 'Settings saved successfully!',
-          color: 'green',
-          withBorder: true,
-          withCloseButton: false,
-        });
-      })
-      .catch((error) => {
-        notifications.show({
-          title: 'Error saving settings:',
-          message: error,
-          color: 'red',
-          withBorder: true,
-          withCloseButton: false,
-        });
-      });
+        }),
+      )
+      .catch(
+        errorNotificationCurried({
+          title: 'Settings save error',
+          message:
+            'It seems something went wrong on our end. Please try again later',
+        }),
+      );
   };
 
   return (
